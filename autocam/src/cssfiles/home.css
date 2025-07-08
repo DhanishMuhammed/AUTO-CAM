@@ -45,6 +45,18 @@ margin-left: 30%;
   font-family: "researcher";
 }
 
+.whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.whatsapp:hover{
+  transform: scale(1.25);
+  transition: 1.0s;
+}
+
 /* Responsive design */
 @media screen and (max-width: 768px) {
   .autoback {

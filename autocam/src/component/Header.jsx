@@ -23,6 +23,38 @@ function Header() {
     setShowSidebar(true)
   }
 
+  const[adminstate,setAdminstate]=useState(false)
+
+ useEffect(()=>{
+  const role=sessionStorage.getItem("userRole")
+const names=sessionStorage.getItem('user')
+
+
+   if(role ==="admin"){
+    setAdminstate(true)
+  }else{
+    setAdminstate(false)
+  } 
+  
+  
+  if(names){
+    setUsername(JSON.parse(names))
+  }
+ },[])
+
+ const [username,setUsername]=useState("")
+
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('user')
+    sessionStorage.removeItem('userRole')
+    sessionStorage.removeItem('username')
+    
+    navigate('/login')
+    setShowSidebar(false)
+  }
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className='bg-success nvabar'>
@@ -44,6 +76,12 @@ function Header() {
                 <Nav className={`fw-bolder pe-3 head ${activeLink === '/Service' ? 'active-link' : ''}`}>Service</Nav>
               </Link>
 
+              {adminstate&&
+                <Link to={'/admin'} style={{ textDecoration: "none" }} onClick={() => handleLinkClick('/admin')}>
+                <Nav className={`fw-bolder pe-3 head ${activeLink === '/admin' ? 'active-link' : ''}`}>admin</Nav>
+              </Link>
+              }
+
               {/* Profile just opens sidebar instead of routing */}
               <Nav onClick={handleProfileClick} className="fw-bolder pe-3 head" style={{ cursor: 'pointer' }}>
                 Profile
@@ -56,13 +94,13 @@ function Header() {
       {/* Sidebar component */}
       <Offcanvas show={showSidebar} onHide={() => setShowSidebar(false)} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>User Profile</Offcanvas.Title>
+          <Offcanvas.Title><h1>{username.Username}</h1></Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Link to={'/cart'} style={{textDecoration:"none"}} ><p><i class="fa-solid fa-cart-shopping"></i> Cart</p></Link>
           <Link to={'/login'} style={{textDecoration:"none"}} ><p><i class="fa-solid fa-circle-user"></i> Login</p></Link>
     
-          <Button variant="danger" className="w-100 mt-3" onClick={() => setShowSidebar(false)}>Logout</Button>
+          <Button variant="danger" className="w-100 mt-3" onClick={()=>handleLogout () }>Logout</Button>
         </Offcanvas.Body>
       </Offcanvas>
     </>

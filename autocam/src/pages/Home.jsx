@@ -1,17 +1,35 @@
 import React from 'react'
 import Header from '../component/Header'
-import { MDBCarousel, MDBCarouselItem } from 'mdb-react-ui-kit'
-import screen from '../assets/images/screen.png'
+import whatsapp from '../assets/images/whatsapp.png'
 import auto from '../assets/images/image1.png'
 import '../cssfiles/home.css'
-import { Button, Card } from 'react-bootstrap'
+import { Button, Card, Carousel, Col, Row } from 'react-bootstrap'
 import Footer from '../component/Footer'
 import ceo from '../assets/images/shibil.png'
 import Marquee from 'react-fast-marquee'
+import { useEffect } from 'react'
+import { getBannerAPI } from '../server/allAPi'
+import { ToastContainer, toast } from 'react-toastify';
+import { useState } from 'react'
 
 
 function Home() {
-  
+  const [Homeposter,sethomeposter]=useState([])
+   const server_url="http://localhost:4000" 
+useEffect(() => {
+    getBanner();
+  }, []);
+
+  const getBanner=async()=>{
+    const image=await getBannerAPI();
+    if(image.status==200){
+      sethomeposter(image.data)
+    }else{
+      toast.error("api fetching faild")
+    }
+  }
+  console.log('Homeposter length:', Homeposter?.length);
+console.log('Homeposter data:', Homeposter);
 
 
 
@@ -21,18 +39,18 @@ function Home() {
       <Header/>
 
       {/* cousera */}
-
-      <MDBCarousel  interval={2000}>
-      <MDBCarouselItem itemId={1}>
-        <img src={screen} className='d-block w-100 ' height={600} alt='...' />
-      </MDBCarouselItem>
-      <MDBCarouselItem itemId={2}>
-        <img src='https://mdbootstrap.com/img/new/slides/042.jpg' height={600} className='d-block w-100' alt='...' />
-      </MDBCarouselItem>
-      <MDBCarouselItem itemId={3}>
-        <img src='https://mdbootstrap.com/img/new/slides/043.jpg' height={600} className='d-block w-100' alt='...' />
-      </MDBCarouselItem>
-    </MDBCarousel>
+        <Carousel interval={2000}>
+  {Homeposter?.map((banner, index) => (
+    <Carousel.Item key={banner._id || index}>
+      <img
+        src={`${server_url}/uploads/${banner.imageUrl}`}
+        className="d-block w-100"
+        height={600}
+        alt="Banner"
+      />
+    </Carousel.Item>
+  ))}
+</Carousel>
 
 
     {/* autocam about */}
@@ -50,64 +68,48 @@ function Home() {
       </div>
     </div>
 
+    {/* whatsapp */}
+
+    <div className=' whatsapp'>
+      <a href="https://wa.me/919226300600?text=Hi">
+        <img src={whatsapp} width={50} alt="" />
+      </a>
+    </div>
+
     {/* products */}
 
     <h1 className='text-center fw-bolder mt-5' style={{textDecoration:"underline",fontFamily:"researcher"}}>Our Moving Produts</h1>
 
     {/* card */}
-<div className="d-flex mt-5">
-  <Card className='container card' style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="https://m.media-amazon.com/images/I/51teiuBnD5L.jpg" />
-      <Card.Body>
-        <Card.Title>Hiki vision</Card.Title>
-        <Card.Text >
-          $211 <br />
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text>
-        <Button className="ms-1" variant="primary">buy</Button>
-        <Button className='ms-1 ' variant="primary">Add to cart<i class="fa-solid fa-cart-shopping"></i></Button>
-      </Card.Body>
-    </Card>
-    <Card className='container' style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="https://m.media-amazon.com/images/I/51teiuBnD5L.jpg" />
-      <Card.Body>
-        <Card.Title>Hiki vision</Card.Title>
-        <Card.Text>
-          $211 <br />
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text>
-        <Button className="ms-1" variant="primary">buy</Button>
-        <Button className='ms-1' variant="primary">Add to cart<i class="fa-solid fa-cart-shopping"></i></Button>
-      </Card.Body>
-    </Card>
-    <Card className='container' style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="https://m.media-amazon.com/images/I/51teiuBnD5L.jpg" />
-      <Card.Body>
-        <Card.Title>Hiki vision</Card.Title>
-        <Card.Text>
-          $211 <br />
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text>
-        <Button className="ms-1" variant="primary">buy</Button>
-        <Button className='ms-1' variant="primary">Add to cart<i class="fa-solid fa-cart-shopping"></i></Button>
-      </Card.Body>
-    </Card>
-    <Card className='container' style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="https://m.media-amazon.com/images/I/51teiuBnD5L.jpg" />
-      <Card.Body>
-        <Card.Title>Hiki vision</Card.Title>
-        <Card.Text>
-          $211 <br />
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text>
-        <Button  className=" ms-1"variant="primary">buy</Button>
-        <Button className='ms-1' variant="primary">Add to cart<i class="fa-solid fa-cart-shopping"></i></Button>
-      </Card.Body>
-    </Card></div>
+<div className=" mt-5 container-fluid">
+  <Row className="mt-5 gx-4 gy-4">
+  {[1, 2, 3,4 ].map((item, index) => (
+    <Col key={index} xs={12} sm={6} md={4} lg={3}>
+      <Card className="h-100 shadow">
+        <Card.Img
+          variant="top"
+          src="https://m.media-amazon.com/images/I/51teiuBnD5L.jpg"
+        />
+        <Card.Body className="d-flex flex-column">
+          <Card.Title>Hiki vision</Card.Title>
+          <Card.Text className="mb-3">
+            $211 <br />
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </Card.Text>
+          <div className="mt-auto">
+            <Button className="me-2" variant="primary">
+              Buy
+            </Button>
+            <Button variant="primary">
+              Add to cart <i className="fa-solid fa-cart-shopping ms-1"></i>
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
+    </Col>
+  ))}
+</Row></div>
     
     {/* instagram */}
     <div className="container mt-5">
@@ -150,12 +152,14 @@ With his expertise in automation solutions and process optimization, Mohammed Sh
       </div>
     </div>
     </div>
+
+  
     
 
     {/* footer */}
 
    <Footer/> 
-      
+      <ToastContainer />
     </>
   )
 }

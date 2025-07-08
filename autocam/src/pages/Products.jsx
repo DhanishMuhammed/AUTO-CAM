@@ -115,37 +115,55 @@ function Products() {
 
       {/* image view section */}
 
-      <div className="image">
-        <h2 className='text-center fw-bolder text-danger mb-4'> What's New?</h2>
-        <Row>
-          <Col lg={8}>
-            <img className='rounded shadow' width={'100%'} height={'320px'} src="https://www.robustel.com/wp-content/uploads/2018/12/shutterstock_366966188.jpg" alt="" />
-          </Col>
-          <Col lg={4}>
-            <img className='rounded shadow' width={'100%'} height={'320px'} src="https://www.shutterstock.com/image-photo/man-looking-home-security-cameras-600nw-586486958.jpg" alt="" />
-          </Col>
+   <div className="image container-fluid px-4">
+  <h2 className="text-center fw-bolder text-danger mb-4">What's New?</h2>
 
-        </Row>
+  <Row className="gx-3 gy-3">
+    <Col xs={12} lg={8}>
+      <img
+        className="rounded shadow img-fluid w-100"
+        style={{ maxHeight: "320px", objectFit: "cover" }}
+        src="https://www.robustel.com/wp-content/uploads/2018/12/shutterstock_366966188.jpg"
+        alt=""
+      />
+    </Col>
+    <Col xs={12} lg={4}>
+      <img
+        className="rounded shadow img-fluid w-100"
+        style={{ maxHeight: "320px", objectFit: "cover" }}
+        src="https://www.shutterstock.com/image-photo/man-looking-home-security-cameras-600nw-586486958.jpg"
+        alt=""
+      />
+    </Col>
+  </Row>
 
-        <Row className='mt-2  ' >
-          <Col lg={3}>
-            <img className='rounded shadow ' width={'390px'} height={'320px'} src="https://igzy.com/wp-content/uploads/2021/09/Wi-Fi-CCTV-Camera-Reshaping-the-Camera-Market-15-09-21.png" alt="" />
-          </Col>
-          <Col></Col>
-
-          <Col lg={3} >
-            <img className='rounded shadow ' width={'390px'} height={'320px'} src="https://cctvinstallationinlondon.weebly.com/uploads/1/4/4/7/144771134/cctv-installation-in-london_orig.jpeg" alt="" />
-          </Col>
-          <Col></Col>
-
-          <Col lg={3}>
-            <img className='rounded shadow ' width={'390px'} height={'320px'} src="https://media.istockphoto.com/id/1330512185/photo/technician-installing-cctv-camera-for-security.jpg?s=612x612&w=0&k=20&c=uS2-J8l8VLyCKS01FU89Oy4XbezUhyOU4jWwtHMOfpk=" alt="" />
-          </Col>
-
-        </Row>
-
-      </div>
-
+  <Row className="mt-3 gx-3 gy-3">
+    <Col xs={12} md={6} lg={4}>
+      <img
+        className="rounded shadow img-fluid w-100"
+        style={{ height: "320px", objectFit: "cover" }}
+        src="https://igzy.com/wp-content/uploads/2021/09/Wi-Fi-CCTV-Camera-Reshaping-the-Camera-Market-15-09-21.png"
+        alt=""
+      />
+    </Col>
+    <Col xs={12} md={6} lg={4}>
+      <img
+        className="rounded shadow img-fluid w-100"
+        style={{ height: "320px", objectFit: "cover" }}
+        src="https://cctvinstallationinlondon.weebly.com/uploads/1/4/4/7/144771134/cctv-installation-in-london_orig.jpeg"
+        alt=""
+      />
+    </Col>
+    <Col xs={12} md={12} lg={4}>
+      <img
+        className="rounded shadow img-fluid w-100"
+        style={{ height: "320px", objectFit: "cover" }}
+        src="https://media.istockphoto.com/id/1330512185/photo/technician-installing-cctv-camera-for-security.jpg?s=612x612&w=0&k=20&c=uS2-J8l8VLyCKS01FU89Oy4XbezUhyOU4jWwtHMOfpk="
+        alt=""
+      />
+    </Col>
+  </Row>
+</div>
 
 
 

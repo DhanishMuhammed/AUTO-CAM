@@ -9,8 +9,10 @@ import View from './component/View'
 import Cart from './component/Cart'
 import SalesEnquiry from './component/SalesEnquary'
 import Login from './component/Login'
-import Register from './component/Register'
+
 import ContactModal from './component/ContactModal'
+import Admin from './pages/Admin'
+import Edits from './component/Edits'
 
 
 function App() {
@@ -27,8 +29,10 @@ function App() {
       <Route path='/cart' element={<Cart/>}/>
       <Route path='/sales' element={<SalesEnquiry/>}/>
       <Route path='/login' element={<Login/>}/>
-      <Route path='/register' element={<Register/>}/>
+      <Route path='/registers' element={<Login register/>}/>
       <Route path='/contactmodal' element={<ContactModal/>}/>
+      <Route path='/admin' element={<Admin/>}/>
+      <Route path='/edits' element={<Edits/>}/>
       <Route path='/*' element={'/'}/>
 
 
