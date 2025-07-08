@@ -19,4 +19,4 @@ router.get('/banners', bannerCtrl.getBanners);
 // Delete banner
 router.delete('/banners/:id', bannerCtrl.deleteBanner);
 
-module.exports = router;
+module.exports = router; 
