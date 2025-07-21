@@ -21,7 +21,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
-    }
+    },
+    cartitems: [
+  {
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Products' },
+    quantity: { type: Number, default: 1 }
+  }
+]
 }, {
     timestamps: true
 });

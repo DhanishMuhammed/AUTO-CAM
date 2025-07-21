@@ -13,6 +13,8 @@ import Login from './component/Login'
 import ContactModal from './component/ContactModal'
 import Admin from './pages/Admin'
 import Edits from './component/Edits'
+import ServiceBooked from './component/ServiceBooked'
+import Orderpayment from './component/Orderpayment'
 
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
       <Route path='/contactmodal' element={<ContactModal/>}/>
       <Route path='/admin' element={<Admin/>}/>
       <Route path='/edits' element={<Edits/>}/>
+      <Route path='/bookedservice' element={<ServiceBooked/>} />
+      <Route path='/orderpage' element={<Orderpayment/>} />
       <Route path='/*' element={'/'}/>
 
 

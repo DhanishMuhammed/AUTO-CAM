@@ -1,25 +1,171 @@
-import React from 'react'
-import { Button, Card, Carousel, Col, FloatingLabel, Form, Row } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { Button, Card, Carousel, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap'
 import {  useNavigate } from 'react-router-dom'
 import Footer from '../component/Footer'
 import Header from '../component/Header'
 import '../cssfiles/product.css'
+import { getProductAPI,addtocartAPI, createOrderAPI,verifyPaymentAPI } from '../server/allAPi'
+import{ ToastContainer, toast } from 'react-toastify'
 
 function Products() {
-
-
+  const [products,setProducts]=useState([])
+  const [modalShow, setModalShow] = useState(false);
+const [searchitem,setSearchitems]=useState('')
+const [paymentdetails,setPaymentdetails]=useState({
+  Username:"",phonenumber:"",email:"",address:"",price:"",productName:""
+})
+const server_url="http://localhost:4000" 
   const navigate = useNavigate()
 
 
-  const handleAdd = () => {
-    navigate('/View');
+
+
+const payments=(data,prdname)=>{
+  const userData = JSON.parse(sessionStorage.getItem("user"));
+  setPaymentdetails(prev => ({
+    ...prev,
+    price: data,
+    productName:prdname
+  }));
+  if (!userData) {
+    navigate('/login');
+    return;
+  }
+
+
+  setModalShow(true)
+}
+
+
+  const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+};
+
+
+
+
+const handleAdd = async () => {
+  // const userData = JSON.parse(sessionStorage.getItem("user"));
+  // if (!userData) {
+  //   navigate('/login');
+  //   return;
+  // }
+
+  const { Username, email, phonenumber,address,price,productName } = paymentdetails;
+
+  const res = await createOrderAPI({ amount: price });
+  const { id: order_id, amount } = res.data.order;
+
+  // Load Razorpay script
+  const isLoaded = await loadRazorpayScript();
+  if (!isLoaded) {
+    toast.error("Failed to load Razorpay. Please try again later.");
+    return;
+  }
+
+  const options = {
+    key: "rzp_test_hKZPC8dz3sXXUm", // Replace with actual key
+    amount: amount.toString(),
+    currency: "INR",
+    name: "Auto cam",
+    description: productName,
+    order_id,
+    handler: async function (response) {
+      console.log("Razorpay response:", response);  // add this
+      const verifyRes = await verifyPaymentAPI({
+        ...response,
+        Username,
+        phonenumber,
+        address: address,
+        payment: price,
+        email,
+        productName
+      });
+
+      if (verifyRes.status === 200) {
+        toast.success("Payment Successful!");
+      } else {
+        toast.error("Payment verification failed");
+      }
+    },
+    prefill: {
+      name: Username,
+      email,
+      contact: phonenumber,
+    },
+    theme: {
+      color: "#3399cc",
+    },
   };
+
+  const razor = new window.Razorpay(options);
+  razor.open();
+  setPaymentdetails({
+    Username:"",phonenumber:"",email:"",address:"",price:"",productName:""
+  })
+  setModalShow(false)
+};
+
+ 
 
   const handleCart =()=>{
     navigate('/cart')
   }
   
+
+  // getting products
+
+  useEffect(()=>{
+    getproducts()
+  },[])
+
+  const getproducts=async()=>{
+    const res= await getProductAPI()
+    if(res.status==200){
+      setProducts(res.data)
+    }else{
+      toast.error("product fecting is faild")
+    }
+  }
+
+  // add to cart
+   const handlecartitems = async (productId) => {
+  const userDataStr = sessionStorage.getItem("user");
+  const token = sessionStorage.getItem("token");
+
+  if (!userDataStr || !token) {
+    navigate('/login');
+    return;
+  }
+
+  try {
+    const userData = JSON.parse(userDataStr);
+    const userId = userData._id;
+
+    const res = await addtocartAPI(userId, productId, 1);
+    console.log('Add to cart response:', res.data);
+    toast.success('Added to cart!');
     
+  } catch (error) {
+    console.error('Add to cart error:', error);
+    toast.error('Add to cart failed.');
+  }
+};
+
+// search products
+const filteredProducts = products.filter((prd) =>
+  prd.productname.toLowerCase().includes(searchitem.toLowerCase())
+);
 
   return (
     <>
@@ -65,50 +211,22 @@ function Products() {
 
       <div className="container  d-flex justify-content-between align-items-center mt-4 mb-5 ">
 
+       {
+       products.slice(0,4).map((prd)=>(
         <Card  style={{ width: '17rem', height: '450px' }}>
-          <Card.Img height={'250px'} variant="top" src="https://www.digitaltrends.com/wp-content/uploads/2023/10/Wyze-Cam-Floodlight-e1697033308555.jpg?fit=720%2C483&p=1" />
+          <Card.Img height={'250px'} variant="top"  src={`${server_url}/uploads/products/${prd.productImage}`} />
           <Card.Body className="d-flex flex-column align-items-center">
-            <Card.Title className='text-center'>Wired vs. wireless security cameras</Card.Title>
+            <Card.Title className='text-center'>{prd.productname}</Card.Title>
             <Card.Text>
 
             </Card.Text>
-            <h3 className='fw-bolder text-danger'>$199</h3>
-            <Button onClick={handleAdd}  variant="warning" className='w-100 fw-bolder text-light'>Buy</Button>
+            <h3 className='fw-bolder text-danger'>₹ {prd.price}</h3>
+            <Button onClick={()=>payments(prd.price,prd.productname)}  variant="warning" className='w-100 fw-bolder text-light'>Buy</Button>
 
           </Card.Body>
         </Card>
+       )) }
 
-        <Card style={{ width: '17rem', height: '450px' }}>
-          <Card.Img height={'250px'} variant="top" src="https://media.wired.com/photos/66c9e16e919d68f2c64fab73/master/w_960,c_limit/Reolink-Argus-4-Pro-Security-Camera-Reviewer-Photo-SOURCE-Simon-Hill.jpg" />
-          <Card.Body className="d-flex flex-column align-items-center">
-            <Card.Title className='text-center'>The Best Outdoor Security Cameras</Card.Title>
-            <Card.Text>
-            </Card.Text>
-            <h3 className='fw-bolder text-danger'>$199</h3>
-            <Button onClick={handleAdd} variant="warning" className='w-100 fw-bolder text-light'>Buy</Button>
-          </Card.Body>
-        </Card>
-        <Card style={{ width: '17rem', height: '450px' }}>
-          <Card.Img height={'250px'} variant="top" src="https://computerbaba.co.in/wp-content/uploads/2022/10/Hikvision-DS-2DE4225IW-DE-2MP-IR-PTZ-Dome-CCTV-camera-for-home-office-At-Best-Price-Only-at-computerbaba.co_.in_.png.webp" />
-          <Card.Body className="d-flex flex-column align-items-center">
-            <Card.Title className='text-center'>Hikvision DS-2DE4225IW-DE 2MP IR </Card.Title>
-            <Card.Text>
-            </Card.Text>
-            <h3 className='fw-bolder text-danger'>$199</h3>
-            <Button onClick={handleAdd} variant="warning" className='w-100 fw-bolder text-light'>Buy</Button>
-          </Card.Body>
-        </Card>
-
-        <Card style={{ width: '17rem', height: '450px' }}>
-          <Card.Img height={'250px'} variant="top" src="https://infronttech.com.au/img/cms/products/Swann/Swann%20New/SWNHD-1200D/SWNHD-1200BE.jpg" />
-          <Card.Body className="d-flex flex-column align-items-center">
-            <Card.Title className='text-center'>Outdoor Wi-Fi Spotlight Security Camera </Card.Title>
-            <Card.Text>
-            </Card.Text>
-            <h3 className='fw-bolder text-danger'>$199</h3>
-            <Button onClick={handleAdd} variant="warning" className='w-100 fw-bolder text-light'>Buy</Button>
-          </Card.Body>
-        </Card>
 
 
       </div>
@@ -179,24 +297,26 @@ function Products() {
       className="form-control w-100 w-sm-75 w-md-50 mx-auto"
       style={{ height: '40px', borderRadius: '50px' }}
       type="text"
+      value={searchitem}
+      onChange={(e)=>setSearchitems(e.target.value)}
       placeholder="Enter Product Name"
     />
   </div>
 
   {/* Product Card Rows */}
   <div className="row gy-4 justify-content-center">
-    {[...Array(8)].map((_, i) => (
+    {filteredProducts.map((items, i) => (
       <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center" key={i}>
         <Card style={{ width: '18rem' }}>
           <Card.Img
             variant="top"
-            src="https://rukminim2.flixcart.com/image/850/1000/kjn6qvk0-0/home-security-camera/o/r/g/4chdvr-2d-combo-05-indoor-security-camera-hikvision-original-imafz5ywpdrvzzkh.jpeg?q=90&crop=false"
+            src={`${server_url}/uploads/products/${items.productImage}`} 
           />
           <Card.Body>
             <div className="d-flex justify-content-between mt-2">
-              <Card.Title>Motorized Focus Thermal</Card.Title>
+              <Card.Title>{items.productname}</Card.Title>
               <Button
-                onClick={handleCart}
+                onClick={()=>handlecartitems(items._id)}
                 variant="danger"
                 style={{
                   backgroundColor: 'white',
@@ -215,9 +335,50 @@ function Products() {
   </div>
 </div>
 
+{/* payment modal */}
+
+<Modal
+      show={modalShow}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Payment Details
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+       <div className='row'>
+       <div className="col-6">
+         <label >Name</label>
+        <input type="text" className='form-control' onChange={e=>setPaymentdetails({...paymentdetails,Username:e.target.value})} />
+         <label >Phone Number</label>
+        <input type="number" className='form-control' onChange={e=>setPaymentdetails({...paymentdetails,phonenumber:e.target.value})}/>
+         <label >Address</label>
+        <input type="text" className='form-control' onChange={e=>setPaymentdetails({...paymentdetails,address:e.target.value})}/>
+       </div>
+       <div className="col-6">
+
+        
+         <label >E-mail</label>
+        <input type="email" className='form-control' onChange={e=>setPaymentdetails({...paymentdetails,email:e.target.value})}/>
+         <label >Product Name</label>
+        <input type="text" className='form-control' value={paymentdetails.productName}/>
+         <label >Price</label>
+        <input type="text" className='form-control' value={paymentdetails.price}/>
+       </div>
+       </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={()=>setModalShow(false)}>Close</Button>
+       <Button onClick={()=>handleAdd()}  variant="warning" className='w-100 fw-bolder text-light'>Buy</Button>
+      </Modal.Footer>
+    </Modal>
+
 
       <Footer />
-
+<ToastContainer autoClose={2000}/>
     </>
   )
 }

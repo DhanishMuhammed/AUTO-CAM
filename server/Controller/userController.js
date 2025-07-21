@@ -1,4 +1,4 @@
-// controllers/authController.js
+// controllers
 const users = require('../Models/userSchema')
 const jwt = require('jsonwebtoken')
 
@@ -54,3 +54,69 @@ exports.login = async (req, res) => {
         return res.status(500).json("Server error");
     }
 };
+
+// add cart item
+exports.addToCart = async (req, res) => {
+    const { userId, productId, quantity } = req.body;
+
+    try {
+        const user = await users.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const existingItem = user.cartitems.find(item =>
+            item.productId.toString() === productId
+        );
+
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            user.cartitems.push({ productId, quantity });
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Cart updated", cart: user.cartitems });
+
+    } catch (err) {
+        res.status(500).json({ message: "Error updating cart", error: err.message });
+    }
+};
+
+// geet cart item
+
+exports.getCartItems = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        const user = await users.findById(userId).populate('cartitems.productId');
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(user.cartitems);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching cart items", error: error.message });
+    }
+};
+
+// delet cart item
+
+exports.deleteCartItem = async (req, res) => {
+  const { userId, productId } = req.params;
+
+  try {
+    const user = await users.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Filter out the product from the cart
+    user.cartitems = user.cartitems.filter(item =>
+      item.productId.toString() !== productId
+    );
+
+    await user.save();
+    res.status(200).json({ message: "Cart item deleted", cart: user.cartitems });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting item", error: err.message });
+  }
+};
+

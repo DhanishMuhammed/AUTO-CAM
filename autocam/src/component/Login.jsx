@@ -16,66 +16,92 @@ function Login({register}) {
   })
 
   console.log(userdata);
+ 
 
   // Register function
-  const handleRegister = async(e) => {
-    e.preventDefault()
-    const {Username, email, password} = userdata
+const handleRegister = async (e) => {
+  e.preventDefault();
+  const { Username, email, password } = userdata;
+   const isValidEmail = (email) => {
+  const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+  const trimmedEmail = email.trim().toLowerCase();
+  const parts = trimmedEmail.split("@");
 
-    if(!Username || !email || !password){
-      alert("fill the boxes")
-    } else {
-      const result = await registerAPI(userdata)
-      if(result.status == 200){
-        navigate('/login')
-        toast.success("Registration successful!")
-        setuserdata({Username: "", email: "", password: ""})
+  return (
+    parts.length === 2 &&
+    /^[a-zA-Z0-9._%+-]+$/.test(parts[0]) && // valid username
+    allowedDomains.includes(parts[1])
+  );
+};
+
+  if (!Username || !email || !password) {
+    alert("Fill all the fields");
+  } else if (!isValidEmail(email)) {
+    toast.warning("Enter a valid email address");
+  } else {
+    try {
+      const result = await registerAPI(userdata);
+      if (result.status === 200) {
+        navigate('/login');
+        toast.success("Registration successful!");
+        setuserdata({ Username: "", email: "", password: "" });
       } else {
-        toast.warning(result.response.data)
+        toast.warning(result.response.data);
       }
+    } catch (err) {
+      toast.error("Registration failed. Try again.");
     }
   }
+};
+
 
   // Login function with admin redirect
-  const handlelogin = async (e) => {
-    e.preventDefault();
+const handlelogin = async (e) => {
+  e.preventDefault();
+  const { email, password } = userdata;
+   const isValidEmail = (email) => {
+  const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+  const trimmedEmail = email.trim().toLowerCase();
+  const parts = trimmedEmail.split("@");
 
-    const { email, password } = userdata;
+  return (
+    parts.length === 2 &&
+    /^[a-zA-Z0-9._%+-]+$/.test(parts[0]) && // valid username
+    allowedDomains.includes(parts[1])
+  );
+};
 
-    if (!email || !password) {
-      toast.error("Fill the email and password");
-    } else {
-      try {
-        console.log({email, password});
-        
-        const result = await loginAPI({ email, password });
+  if (!email || !password) {
+    toast.error("Fill the email and password");
+  } else if (!isValidEmail(email)) {
+    toast.warning("Enter a valid email address");
+  } else {
+    try {
+      const result = await loginAPI({ email, password });
 
-        if (result.status === 200) {
-          // Store user data and token in localStorage
-          sessionStorage.setItem('token', result.data.token);
-          sessionStorage.setItem('user', JSON.stringify(result.data.user));
-          sessionStorage.setItem('userRole', result.data.role);
-          
-      
+      if (result.status === 200) {
+        sessionStorage.setItem('token', result.data.token);
+        sessionStorage.setItem('user', JSON.stringify(result.data.user));
+        sessionStorage.setItem('userRole', result.data.role);
 
-          toast.success("Login successfully");
-          setuserdata({ Username: "", email: "", password: "" });
+        toast.success("Login successfully");
+        setuserdata({ Username: "", email: "", password: "" });
 
-          // Check user role and redirect accordingly
-          if (result.data.role === 'admin') {
-            navigate('/admin'); // Redirect to your existing admin.jsx
-          } else {
-            navigate('/'); // Redirect to regular user dashboard
-          }
+        if (result.data.role === 'admin') {
+          navigate('/admin');
         } else {
-          toast.warning(result.response.data);
+          navigate('/');
         }
-      } catch (err) {
-        console.error("Login error:", err);
-        toast.error("Login failed. Please try again.");
+      } else {
+        toast.warning(result.response.data);
       }
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error("Login failed. Please try again.");
     }
-  };
+  }
+};
+
 
   return (
     <>

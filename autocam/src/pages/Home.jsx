@@ -8,16 +8,20 @@ import Footer from '../component/Footer'
 import ceo from '../assets/images/shibil.png'
 import Marquee from 'react-fast-marquee'
 import { useEffect } from 'react'
-import { getBannerAPI } from '../server/allAPi'
+import { addtocartAPI, getBannerAPI, getProductAPI } from '../server/allAPi'
 import { ToastContainer, toast } from 'react-toastify';
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 
 function Home() {
   const [Homeposter,sethomeposter]=useState([])
+  const [homeproduct,sethomeproduct]=useState([])
+
    const server_url="http://localhost:4000" 
 useEffect(() => {
     getBanner();
+    getproducts()
   }, []);
 
   const getBanner=async()=>{
@@ -31,6 +35,62 @@ useEffect(() => {
   console.log('Homeposter length:', Homeposter?.length);
 console.log('Homeposter data:', Homeposter);
 
+
+const getproducts= async()=>{
+  const res= await getProductAPI()
+  if (res.status==200) {
+    sethomeproduct(res.data)
+  }else{
+    toast.error("product feting faild")
+  }
+}
+
+
+// buy button
+
+
+const navigate=useNavigate()
+
+const handletobuy=()=>{
+  
+
+  const buy= sessionStorage.getItem("token")
+
+  if(buy){
+    navigate('/cart')
+  }else{
+    navigate("/login")
+    toast.warning('you need login')
+  }
+
+}
+
+// // add-to-cart
+
+
+
+const handlecartitems = async (productId) => {
+  const userDataString = sessionStorage.getItem("user");
+  const token = sessionStorage.getItem("token");
+
+  if (!userDataString || !token) {
+    navigate('/login');
+    return;
+  }
+
+  try {
+    const userData = JSON.parse(userDataString);
+    const userId = userData._id;
+
+    const res = await addtocartAPI(userId, productId, 1);
+    toast.success('Check console for response details');
+    
+  } catch (error) {
+    toast.error('add to cart error ');
+  }
+};
+
+ 
 
 
   return (
@@ -83,25 +143,24 @@ console.log('Homeposter data:', Homeposter);
     {/* card */}
 <div className=" mt-5 container-fluid">
   <Row className="mt-5 gx-4 gy-4">
-  {[1, 2, 3,4 ].map((item, index) => (
+  {homeproduct.slice(0,4).map((item, index) => (
     <Col key={index} xs={12} sm={6} md={4} lg={3}>
       <Card className="h-100 shadow">
         <Card.Img
           variant="top"
-          src="https://m.media-amazon.com/images/I/51teiuBnD5L.jpg"
+          src={`${server_url}/uploads/products/${item.productImage}`}
         />
         <Card.Body className="d-flex flex-column">
-          <Card.Title>Hiki vision</Card.Title>
+          <Card.Title>{item.productname}</Card.Title>
           <Card.Text className="mb-3">
-            $211 <br />
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
+            ₹ {item.price} <br />
+           {item.description}
           </Card.Text>
           <div className="mt-auto">
-            <Button className="me-2" variant="primary">
+            <Button className="me-2" variant="primary" onClick={handletobuy}>
               Buy
             </Button>
-            <Button variant="primary">
+            <Button variant="primary" onClick={()=>handlecartitems(item._id)}>
               Add to cart <i className="fa-solid fa-cart-shopping ms-1"></i>
             </Button>
           </div>
@@ -159,7 +218,7 @@ With his expertise in automation solutions and process optimization, Mohammed Sh
     {/* footer */}
 
    <Footer/> 
-      <ToastContainer />
+      <ToastContainer autoClose={2000}/>
     </>
   )
 }
