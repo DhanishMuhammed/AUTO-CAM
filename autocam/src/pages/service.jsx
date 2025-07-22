@@ -74,11 +74,11 @@ console.log(saveservce);
 
 
   return (
-    <>
+    <div className='bodi'>
       <Header />
-      <div className="container my-5">
+      <div className="container my-5 ">
         {/* Header Section */}
-        <div className="text-center mb-5">
+        <div className="text-center mb-5 text-white montserrat">
           <h2>Smart Automation, Security & Networking Solutions</h2>
           <p>Explore our wide range of services designed to enhance convenience, safety, and connectivity.</p>
 
@@ -1439,7 +1439,7 @@ console.log(saveservce);
       </div>
       <Footer />
       <ToastContainer autoClose={3000} />
-    </>
+    </div>
   )
 }
 

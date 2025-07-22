@@ -2,21 +2,43 @@
 .img {
     border-radius: 50%;
     width: 260px;
+    
     max-width: 100%;
-    height: auto;
+    height: 250px;
 }
 
 .back {
-    background-image: url("../assets/images/autocam branding.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    padding: 20px;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 20px;
+  overflow: hidden;
 }
+
+.back::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("../assets/images/autocam branding.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(3px);
+  z-index: -1; /* behind content */
+}
+
 
 .main {
     padding-top: 130px;
+}
+
+.logbox{
+    background-color:#dcd7c961 ;
+    height: 400px;
+    box-shadow: #9a999977 0px 0px 8px 2px;
 }
 
 /* Mobile First - Extra Small devices (phones, 576px and down) */
@@ -71,6 +93,9 @@
     .Form {
         width: 100% !important;
     }
+    .logbox{
+        padding: auto;
+    }
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -103,6 +128,9 @@
     h1 {
         font-size: 2rem !important;
     }
+    .logbox{
+        padding: auto;
+    }
 }
 
 /* Medium devices (tablets, 768px and up) */
@@ -129,6 +157,9 @@
     .back {
         padding: 25px;
     }
+    .logbox{
+        padding: auto;
+    }
 }
 
 /* Large devices (desktops, 992px and up) */
@@ -145,6 +176,9 @@
     .img {
         width: 250px;
         margin-left: 30px;
+    }
+    .logbox{
+        padding: auto;
     }
 }
 
@@ -174,5 +208,9 @@
     .btn {
         padding: 12px 20px;
         font-size: 16px;
+    }
+
+    .logbox{
+        padding: auto;
     }
 }

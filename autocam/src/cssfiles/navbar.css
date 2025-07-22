@@ -10,9 +10,18 @@
   font-family: "researcher";
 }
 
-.head:hover {
-  color: #1c76cf;
+
+.nvabar{
+  background-color: #002245;
+    position: relative;
+  z-index: 10;
+  opacity: 1;
+   /* background: linear-gradient(, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0)); */
+   /* background: linear-gradient(bottom,rgba(255, 255, 255, 0.8)); */
 }
+
+
+
 
 .active-link {
   position: relative;
@@ -23,7 +32,7 @@
   position: absolute;
   bottom: -5px;
   left: 0;
-  width: 100%;
+  width: 80%;
   height: 2px;
   background-color: white;
   border-radius: 1px;
@@ -35,7 +44,7 @@
   position: absolute;
   bottom: -5px;
   left: 0;
-  width: 100%;
+  width: 80%;
   height: 2px;
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 1px;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Nav, Navbar, Offcanvas, Button } from 'react-bootstrap'
-import logs from '../assets/images/set.png'
+import logs from '../assets/images/new2.png'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import '../cssfiles/navbar.css'
 
@@ -55,9 +55,23 @@ const names=sessionStorage.getItem('user')
     setShowSidebar(false)
   }
 
+
+  const tocart=()=>{
+    const user=sessionStorage.getItem('user')
+
+    if(user){
+      navigate('/cart')
+    }else{
+      navigate('/login')
+    }
+
+  }
+
+
+
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" className='bg-success nvabar'>
+      <Navbar collapseOnSelect expand="lg" className=' nvabar'>
         <Container>
           <img src={logs} width={100} alt="" />
 
@@ -97,7 +111,7 @@ const names=sessionStorage.getItem('user')
           <Offcanvas.Title><h1>{username.Username}</h1></Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Link to={'/cart'} style={{textDecoration:"none"}} ><p><i class="fa-solid fa-cart-shopping"></i> Cart</p></Link>
+          <h6 onClick={tocart} ><p><i class="fa-solid fa-cart-shopping"></i> Cart</p></h6>
           <Link to={'/login'} style={{textDecoration:"none"}} ><p><i class="fa-solid fa-circle-user"></i> Login</p></Link>
     
           <Button variant="danger" className="w-100 mt-3" onClick={()=>handleLogout () }>Logout</Button>

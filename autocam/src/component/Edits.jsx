@@ -176,19 +176,25 @@ const deleteproducts = async(id)=>{
 
 
   return (
-    <>
+    <div >
       <div className='container mt-5'>
         <Link to={'/admin'} style={{ textDecoration: "none" }}>Back to admin</Link>
 
         <div className='mt-5'>
-          <div className='d-flex gap-5 flex-wrap'>
+           <h1 className="text-center">
+                 Manage your webite
+            </h1>
+          <div className='d-flex gap-5 flex-wrap mt-5 justify-content-center'>
+           
 
 
             {/* Home Page Banner */}
 
 
-            <div className="w-25">
-              <h5 className='border rounded shadow p-4 text-center' onClick={() => handleShow('homeBanner')}>
+            <div className="w-25 border rounded shadow text-center p-4">
+              <i class="fa-solid fa-image fa-2xl"></i>
+              <h5 className='p-4 text-center' onClick={() => handleShow('homeBanner')}>
+                
                 Home Page Banner
               </h5>
               <Modal show={activeModal === 'homeBanner'} onHide={handleClose}
@@ -246,8 +252,9 @@ const deleteproducts = async(id)=>{
             </div>
 
             {/* Other sections (optional placeholders) */}
-            <div className="w-25">
-              <h5 className='border rounded shadow p-4 text-center' onClick={() => handleShow('movingProduct')}>
+            <div className="w-25border rounded shadow p-4 text-center">
+              <i class="fa-solid fa-truck-fast fa-2xl"></i>
+              <h5 className='mt-4' onClick={() => handleShow('movingProduct')}>
                 Home Page Moving Product
               </h5>
               <Modal show={activeModal === 'movingProduct'} onHide={handleClose}>
@@ -264,8 +271,9 @@ const deleteproducts = async(id)=>{
 
             {/* products */}
 
-            <div className="w-25">
-              <h5 className='border rounded shadow p-4 text-center' onClick={() => handleShow('productBanner')}>
+            <div className="w-25 border rounded shadow p-4 text-center">
+              <i class="fa-solid fa-layer-group fa-2xl"></i>
+              <h5 className='mt-4' onClick={() => handleShow('productBanner')}>
                 Products
               </h5>
               <Modal show={activeModal === 'productBanner'} onHide={handleClose}   
@@ -348,7 +356,7 @@ const deleteproducts = async(id)=>{
       </div>
 
       <ToastContainer autoClose={3000} />
-    </>
+    </div>
   );
 }
 

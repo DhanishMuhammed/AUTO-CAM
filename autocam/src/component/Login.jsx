@@ -1,5 +1,5 @@
 import React from 'react'
-import auto from '../assets/images/image1.png'
+import auto from '../assets/images/logonew.png'
 import "../cssfiles/login.css"
 import { Button, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
@@ -114,9 +114,9 @@ const handlelogin = async (e) => {
           <div className="col-6">
             <img className='img ms-5 mt-5' src={auto} alt="" />
           </div>
-          <div className="col-6">
-            <div className="d-flex align-items-center flex-column mt-5">
-              <h1 className="fw-bolder text-light mt-2" style={{fontFamily:"researcher"}}>
+          <div className="col-6 logbox rounded box-shadow">
+            <div className="d-flex align-items-center flex-column mt-5 ">
+              <h1 className="fw-bolder  mt-2" style={{fontFamily:"researcher",color:"#002245"}}>
                 AUTOCAM
               </h1>
               <h5 className='text-light fw-bolder text-center'></h5>
@@ -129,6 +129,7 @@ const handlelogin = async (e) => {
                       placeholder="Enter your name" 
                       onChange={e => setuserdata({...userdata, Username: e.target.value})} 
                       value={userdata.Username} 
+                      className='rounded-pill'
                     />
                   </Form.Group>
                 }
@@ -139,6 +140,7 @@ const handlelogin = async (e) => {
                     placeholder="Enter your email" 
                     onChange={e => setuserdata({...userdata, email: e.target.value})} 
                     value={userdata.email} 
+                    className='rounded-pill'
                   />
                 </Form.Group>
                 
@@ -148,18 +150,19 @@ const handlelogin = async (e) => {
                     placeholder="Enter your password" 
                     onChange={e => setuserdata({...userdata, password: e.target.value})} 
                     value={userdata.password} 
+                    className='rounded-pill'
                   />
                 </Form.Group>
                 
                 {
                   isRegsiterd ?
-                    <div className='mt-3'>
-                      <p className='mt-2'>Already have an account? Click here to <Link to={'/login'} style={{ textDecoration: 'underline', color: 'skyblue' }}>login</Link></p>
-                      <button className='btn btn-primary text-light' onClick={handleRegister}>Register</button>
+                    <div className='mt-3 text-center'>
+                      <p className='mt-2'style={{color:"#002245"}}>Already have an account? Click here to <Link to={'/login'} style={{ textDecoration: 'underline', color: 'skyblue' }}>login</Link></p>
+                      <button className='btn btn-primary text-light rounded-pill' onClick={handleRegister}>Register</button>
                     </div> :
-                    <div className='mt-3'>
-                      <p className='mt-2'>New user? Click here to <Link to={'/registers'} style={{ textDecoration: 'underline', color: 'skyblue' }}>Register</Link></p>
-                      <button className='btn btn-primary text-light' onClick={handlelogin}>Login</button>
+                    <div className='mt-3 text-center'>
+                      <p className='mt-2 'style={{color:"#002245"}}>New user? Click here to <Link to={'/registers'} style={{ textDecoration: 'underline', color: 'skyblue' }}>Register</Link></p>
+                      <button className='btn btn-primary text-light rounded-pill w-25' onClick={handlelogin}>Login</button>
                     </div>
                 }
               </Form>

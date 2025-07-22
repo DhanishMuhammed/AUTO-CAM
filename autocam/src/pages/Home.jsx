@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../component/Header'
 import whatsapp from '../assets/images/whatsapp.png'
-import auto from '../assets/images/image1.png'
+import auto from '../assets/images/logonew.png'
 import '../cssfiles/home.css'
 import { Button, Card, Carousel, Col, Row } from 'react-bootstrap'
 import Footer from '../component/Footer'
@@ -94,17 +94,17 @@ const handlecartitems = async (productId) => {
 
 
   return (
-    <>
+    < div className='pagefull'>
     
       <Header/>
 
       {/* cousera */}
-        <Carousel interval={2000}>
+        <Carousel  className=' container' interval={2000}>
   {Homeposter?.map((banner, index) => (
     <Carousel.Item key={banner._id || index}>
       <img
         src={`${server_url}/uploads/${banner.imageUrl}`}
-        className="d-block w-100"
+        className="d-block w-100 rounded-4"
         height={600}
         alt="Banner"
       />
@@ -118,10 +118,10 @@ const handlecartitems = async (productId) => {
 
     <div className="container row align-items-center">
       <div className='col-6 '>
-        <img className='autoback text-center' src={auto} width={400} alt="" />
+        <img className='autoback text-center' src={auto} width={200} alt="" />
       </div>
       <div className="col-6">
-        <h1 className='text-center autotextt m-5 fw-bolder text-success autocam'>AUTOCAM</h1>
+        <h1 className='text-center autotextt m-5 fw-bolder  autocam'>AUTOCAM</h1>
       <h5 className='autotext'>
       AUTOCAM is a leading provider of CCTV and automation solutions for homes and businesses. Our team of experts works tirelessly to provide top-notch security and convenience for our clients, making us a trusted name in the industry.
       </h5>
@@ -138,19 +138,20 @@ const handlecartitems = async (productId) => {
 
     {/* products */}
 
-    <h1 className='text-center fw-bolder mt-5' style={{textDecoration:"underline",fontFamily:"researcher"}}>Our Moving Produts</h1>
+    <h1 className='text-center text-black fw-bolder mt-5' style={{textDecoration:"underline",fontFamily:"researcher"}}>Our Moving Produts</h1>
 
     {/* card */}
-<div className=" mt-5 container-fluid">
-  <Row className="mt-5 gx-4 gy-4">
+<div className=" mt-5 gap-5 d-flex justify-content-center">
+  <Row className="mt-5 gx-4 gy-4 ">
   {homeproduct.slice(0,4).map((item, index) => (
     <Col key={index} xs={12} sm={6} md={4} lg={3}>
-      <Card className="h-100 shadow">
+      <Card className="h-100 shadow" style={{ width: '17rem' }}>
         <Card.Img
           variant="top"
           src={`${server_url}/uploads/products/${item.productImage}`}
+          width={100}
         />
-        <Card.Body className="d-flex flex-column">
+        <Card.Body className="d-flex flex-column ">
           <Card.Title>{item.productname}</Card.Title>
           <Card.Text className="mb-3">
             ₹ {item.price} <br />
@@ -172,9 +173,9 @@ const handlecartitems = async (productId) => {
     
     {/* instagram */}
     <div className="container mt-5">
-      <h1 className='text-center' style={{fontFamily:"researcher"}}>our instagram feed</h1>
+      <h1 className='text-center ' style={{fontFamily:"researcher",color:"#DCD7C9"}}>our instagram feed</h1>
 
-      <p className='text-center mt-5'>Follow on us <span ><a style={{textDecoration:"none",color:" #962fbf"}} href="https://www.instagram.com/autocam._?igsh=Mnc3Z3Zra3k3enVs">Instagram</a></span></p>
+      <p className='text-center mt-5' style={{color:"#DCD7C9"}}>Follow on us <span ><a style={{textDecoration:"none",color:" #962fbf"}} href="https://www.instagram.com/autocam._?igsh=Mnc3Z3Zra3k3enVs">Instagram</a></span></p>
       
 
 
@@ -196,7 +197,7 @@ const handlecartitems = async (productId) => {
 
     {/* CEO */}
     <div>
-    <h1 className='fw-bolder mt-5 text-center'>Our CEO</h1>
+    <h1 className='fw-bolder mt-5 text-center text-black'>Our CEO</h1>
       <div className="container row">
       
       <div className="col-6">
@@ -217,9 +218,11 @@ With his expertise in automation solutions and process optimization, Mohammed Sh
 
     {/* footer */}
 
-   <Footer/> 
+  <div className="mt-3">
+     <Footer/> 
+  </div>
       <ToastContainer autoClose={2000}/>
-    </>
+    </div>
   )
 }
 

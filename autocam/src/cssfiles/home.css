@@ -9,13 +9,38 @@
   text-align: center;
   border-radius: 50%;
   width: 300px;
+  height: 300px;
   max-width: 90%;
    margin-top: 15%;
 margin-left: 30%;
 }
 
+.pagefull {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Blur background layer */
+.pagefull::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url('../assets/images/autocam branding.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: blur(2px); /* Adjust blur here */
+  z-index: -1;
+}
+
+
+
 .ceop {
   margin-top: 19%;
+  color: #DCD7C9;
 }
 
 .marq-items {
@@ -43,6 +68,11 @@ margin-left: 30%;
 
 .autocam {
   font-family: "researcher";
+  color: #DCD7C9;
+}
+
+.autotext{
+  color: #DCD7C9;
 }
 
 .whatsapp {
@@ -56,11 +86,15 @@ margin-left: 30%;
   transform: scale(1.25);
   transition: 1.0s;
 }
+.card{
+  background-color: #DCD7C9;
+}
 
 /* Responsive design */
 @media screen and (max-width: 768px) {
   .autoback {
     width: 70%;
+    height: 230px;
     margin: 10% auto;
   }
 

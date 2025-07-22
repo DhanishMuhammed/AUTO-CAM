@@ -36,6 +36,20 @@ const payments=(data,prdname)=>{
   setModalShow(true)
 }
 
+  // Validate email against allowed domains
+const isValidEmail = (email) => {
+  const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+  const trimmedEmail = email.trim().toLowerCase();
+  const parts = trimmedEmail.split("@");
+  return parts.length === 2 && allowedDomains.includes(parts[1]);
+};
+
+// Validate 10-digit Indian phone numbers
+const isValidPhoneNumber = (phone) => {
+  const phoneStr = phone.toString().trim();
+  return /^[6-9]\d{9}$/.test(phoneStr);
+};
+
 
   const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -63,15 +77,30 @@ const handleAdd = async () => {
 
   const { Username, email, phonenumber,address,price,productName } = paymentdetails;
 
-  const res = await createOrderAPI({ amount: price });
-  const { id: order_id, amount } = res.data.order;
-
-  // Load Razorpay script
-  const isLoaded = await loadRazorpayScript();
-  if (!isLoaded) {
-    toast.error("Failed to load Razorpay. Please try again later.");
-    return;
-  }
+ if (!Username || !email || !phonenumber || !address) {
+     toast.warning("Please fill in all required fields");
+     return;
+   }
+ 
+   if (!isValidEmail(email)) {
+     toast.warning("Please enter a valid email (e.g., gmail.com, yahoo.com)");
+     return;
+   }
+ 
+   if (!isValidPhoneNumber(phonenumber)) {
+     toast.warning("Please enter a valid 10-digit phone number");
+     return;
+   }
+ 
+   // Proceed to create Razorpay order
+   const res = await createOrderAPI({ amount: price });
+   const { id: order_id, amount } = res.data.order;
+ 
+   const isLoaded = await loadRazorpayScript();
+   if (!isLoaded) {
+     toast.error("Failed to load Razorpay. Please try again later.");
+     return;
+   }
 
   const options = {
     key: "rzp_test_hKZPC8dz3sXXUm", // Replace with actual key
@@ -89,7 +118,12 @@ const handleAdd = async () => {
         address: address,
         payment: price,
         email,
-        productName
+        products: [
+    {
+      productName,
+      quantity: 1
+    }
+  ]
       });
 
       if (verifyRes.status === 200) {
@@ -168,10 +202,11 @@ const filteredProducts = products.filter((prd) =>
 );
 
   return (
-    <>
+    <div className='bod'>
     <Header/>
-      <Carousel data-bs-theme="light">
-        <Carousel.Item>
+    <div className="container">
+        <Carousel  data-bs-theme="light">
+        <Carousel.Item className='rounded-pill'>
           <img
             className="d-block w-100" height={'440px'}
             src="https://www.cpplusworld.com/prodassets/banners/f50a4500-cd98-467c-8786-5051c11753c0.jpg"
@@ -206,14 +241,14 @@ const filteredProducts = products.filter((prd) =>
       {/* premium cards section */}
 
       <div className="premium  mt-5 mb-5">
-        <h1 className='text-center fw-bolder text-danger mt-3'> Products Spotlight</h1>
+        <h1 className='text-center montserrat mt-3'> Products Spotlight</h1>
       </div>
 
-      <div className="container  d-flex justify-content-between align-items-center mt-4 mb-5 ">
+      <div className="container    d-flex justify-content-between align-items-center mt-4 mb-5 ">
 
        {
        products.slice(0,4).map((prd)=>(
-        <Card  style={{ width: '17rem', height: '450px' }}>
+        <Card className='prd-1' style={{ width: '17rem', height: '450px' }}>
           <Card.Img height={'250px'} variant="top"  src={`${server_url}/uploads/products/${prd.productImage}`} />
           <Card.Body className="d-flex flex-column align-items-center">
             <Card.Title className='text-center'>{prd.productname}</Card.Title>
@@ -234,7 +269,7 @@ const filteredProducts = products.filter((prd) =>
       {/* image view section */}
 
    <div className="image container-fluid px-4">
-  <h2 className="text-center fw-bolder text-danger mb-4">What's New?</h2>
+  <h2 className="text-center montserrat mb-4">What's New?</h2>
 
   <Row className="gx-3 gy-3">
     <Col xs={12} lg={8}>
@@ -292,9 +327,9 @@ const filteredProducts = products.filter((prd) =>
 
   {/* Centered Heading & Input */}
   <div className="text-center mb-4">
-    <h1 className="text-danger fw-bolder mb-3">View Our Products</h1>
+    <h1 className="  mb-3 montserrat">View Our Products</h1>
     <input
-      className="form-control w-100 w-sm-75 w-md-50 mx-auto"
+      className="form-control w-100 w-sm-75 w-md-50 mx-auto shadow shadow-3"
       style={{ height: '40px', borderRadius: '50px' }}
       type="text"
       value={searchitem}
@@ -307,10 +342,11 @@ const filteredProducts = products.filter((prd) =>
   <div className="row gy-4 justify-content-center">
     {filteredProducts.map((items, i) => (
       <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center" key={i}>
-        <Card style={{ width: '18rem' }}>
+        <Card className='prd-1' style={{ width: '16rem' }}>
           <Card.Img
             variant="top"
             src={`${server_url}/uploads/products/${items.productImage}`} 
+            width={10}
           />
           <Card.Body>
             <div className="d-flex justify-content-between mt-2">
@@ -376,10 +412,11 @@ const filteredProducts = products.filter((prd) =>
       </Modal.Footer>
     </Modal>
 
+    </div>
 
       <Footer />
 <ToastContainer autoClose={2000}/>
-    </>
+    </div>
   )
 }
 

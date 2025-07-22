@@ -12,7 +12,7 @@ function Footer() {
         </div>
 
         <div>
-          <a href='' className='me-4 text-reset'>
+          <a href='https://www.facebook.com/share/16naNLw3TM/?mibextid=wwXIfr' className='me-4 text-reset'>
             <MDBIcon fab icon="facebook-f" />
           </a>
           <a href='' className='me-4 text-reset'>
@@ -21,7 +21,7 @@ function Footer() {
           <a href='' className='me-4 text-reset'>
             <MDBIcon fab icon="google" />
           </a>
-          <a href='' className='me-4 text-reset'>
+          <a href='https://www.instagram.com/autocam._?igsh=Mnc3Z3Zra3k3enVs' className='me-4 text-reset'>
             <MDBIcon fab icon="instagram" />
           </a>
           <a href='' className='me-4 text-reset'>
@@ -40,8 +40,7 @@ function Footer() {
                 AUTO CAM
               </h6>
               <p>
-                Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit.
+                AUTOCAM is a leading provider of CCTV and automation solutions for homes and businesses. Our team of experts works tirelessly to provide top-notch security and convenience for our clients, making us a trusted name in the industry.
               </p>
             </MDBCol>
 

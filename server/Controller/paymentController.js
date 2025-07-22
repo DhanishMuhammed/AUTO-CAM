@@ -39,7 +39,7 @@ exports.verifyPayment = async (req, res) => {
       address,
       payment,
       email,
-      productName
+      products
     } = req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -55,7 +55,7 @@ exports.verifyPayment = async (req, res) => {
         address,
         payment,
         email,
-        productName
+        products
       });
 
       await newPayment.save();
