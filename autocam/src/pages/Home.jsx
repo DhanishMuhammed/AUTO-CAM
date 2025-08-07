@@ -8,7 +8,7 @@ import Footer from '../component/Footer'
 import ceo from '../assets/images/shibil.png'
 import Marquee from 'react-fast-marquee'
 import { useEffect } from 'react'
-import { addtocartAPI, getBannerAPI, getProductAPI } from '../server/allAPi'
+import { addtocartAPI, getBannerAPI, getInstafeedAPI, getProductAPI } from '../server/allAPi'
 import { ToastContainer, toast } from 'react-toastify';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -17,11 +17,13 @@ import { useNavigate } from 'react-router-dom'
 function Home() {
   const [Homeposter,sethomeposter]=useState([])
   const [homeproduct,sethomeproduct]=useState([])
+  const [posts, setPosts] = useState([]);
 
    const server_url="http://localhost:4000" 
 useEffect(() => {
     getBanner();
-    getproducts()
+    getproducts();
+    instafeed()
   }, []);
 
   const getBanner=async()=>{
@@ -32,16 +34,21 @@ useEffect(() => {
       toast.error("api fetching faild")
     }
   }
-  console.log('Homeposter length:', Homeposter?.length);
-console.log('Homeposter data:', Homeposter);
+  
 
 
 const getproducts= async()=>{
   const res= await getProductAPI()
-  if (res.status==200) {
+  try{
+    if (res.status==200) {
     sethomeproduct(res.data)
   }else{
     toast.error("product feting faild")
+  }
+
+  }catch(err){
+    console.log("insta error is:",err);
+    
   }
 }
 
@@ -90,6 +97,21 @@ const handlecartitems = async (productId) => {
   }
 };
 
+// instagram
+
+const  instafeed=async()=>{
+  const res= await getInstafeedAPI()
+  if(res.status==200){
+    setPosts(res.data)
+    // console.log(res.data);
+    
+  }else{
+    console.log("api fecting is faild");
+    
+  }
+
+}
+
  
 
 
@@ -132,7 +154,8 @@ const handlecartitems = async (productId) => {
 
     <div className=' whatsapp'>
       <a href="https://wa.me/919226300600?text=Hi">
-        <img src={whatsapp} width={50} alt="" />
+        {/* <img src={whatsapp} width={50} alt="" /> */}
+        <h3><i className="fa-brands fa-whatsapp fa-2xl" style={{color:"#25D366"}}></i></h3>
       </a>
     </div>
 
@@ -141,35 +164,37 @@ const handlecartitems = async (productId) => {
     <h1 className='text-center text-black fw-bolder mt-5' style={{textDecoration:"underline",fontFamily:"researcher"}}>Our Moving Produts</h1>
 
     {/* card */}
-<div className=" mt-5 gap-5 d-flex justify-content-center">
-  <Row className="mt-5 gx-4 gy-4 ">
-  {homeproduct.slice(0,4).map((item, index) => (
-    <Col key={index} xs={12} sm={6} md={4} lg={3}>
-      <Card className="h-100 shadow" style={{ width: '17rem' }}>
-        <Card.Img
-          variant="top"
-          src={`${server_url}/uploads/products/${item.productImage}`}
-          width={100}
-        />
-        <Card.Body className="d-flex flex-column ">
-          <Card.Title>{item.productname}</Card.Title>
-          <Card.Text className="mb-3">
-            ₹ {item.price} <br />
-           {item.description}
-          </Card.Text>
-          <div className="mt-auto">
-            <Button className="me-2" variant="primary" onClick={handletobuy}>
-              Buy
-            </Button>
-            <Button variant="primary" onClick={()=>handlecartitems(item._id)}>
-              Add to cart <i className="fa-solid fa-cart-shopping ms-1"></i>
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
-    </Col>
-  ))}
-</Row></div>
+<div className="mt-5 d-flex justify-content-center container">
+  <Row className="mt-5 gx-4 gy-2 w-100">
+    {homeproduct.slice(0, 4).map((item, index) => (
+      <Col key={index} xs={6} sm={6} md={4} lg={3}>
+        <Card className=" shadow  moveCard">
+          <Card.Img
+            variant="top"
+            className='prd_image text-center'
+            src={`${server_url}/uploads/products/${item.productImage}`}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title>{item.productname}</Card.Title>
+            <Card.Text className="mb-3">
+              ₹ {item.price} <br />
+              {item.description}
+            </Card.Text>
+            <div className="mt-auto">
+              <Button className="me-2" variant="primary" onClick={handletobuy}>
+                Buy
+              </Button>
+              <Button variant="primary" onClick={() => handlecartitems(item._id)}>
+                Add to cart <i className="fa-solid fa-cart-shopping ms-1"></i>
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</div>
+
     
     {/* instagram */}
     <div className="container mt-5">
@@ -179,19 +204,18 @@ const handlecartitems = async (productId) => {
       
 
 
-      <Marquee className='' pauseOnHover gradient={false} speed={150}>
-      <div className=" marq-items">
-        <div className="m-4">
-          <img  className=' marqu-item' src="https://i.pinimg.com/236x/c2/38/c0/c238c0658e99cf51c935f2596951303a.jpg" alt="" />
+       <Marquee className="" pauseOnHover gradient={false} speed={150}>
+        <div className="marq-items">
+          {posts
+            .filter(post => post.media_type === "IMAGE" || post.media_type === "CAROUSEL_ALBUM")
+            .map((post, index) => (
+              <div className="m-4" key={index}>
+                <a href={post.permalink} target="_blank" rel="noopener noreferrer">
+                  <img className="marqu-item" width={100} height={300} src={post.media_url} alt={post.caption || 'Instagram post'} />
+                </a>
+              </div>
+            ))}
         </div>
-        <div className="  m-4  ">
-          <img className=' marqu-item' src="https://i.pinimg.com/236x/c2/38/c0/c238c0658e99cf51c935f2596951303a.jpg" alt="" />
-        </div>
-        <div className=" m-4  ">
-          <img className='marqu-item'  src="https://i.pinimg.com/236x/c2/38/c0/c238c0658e99cf51c935f2596951303a.jpg" alt="" />
-        </div>
-      </div>
-       
       </Marquee>
     </div>
 

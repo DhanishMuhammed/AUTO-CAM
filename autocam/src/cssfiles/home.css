@@ -14,6 +14,25 @@
    margin-top: 15%;
 margin-left: 30%;
 }
+/* General Card Styling */
+.moveCard {
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+.prd_image {
+  width: 50% !important;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.moveCard:hover {
+  transform: translateY(-5px);
+}
+
+
+
 
 .pagefull {
   position: relative;
@@ -86,9 +105,8 @@ margin-left: 30%;
   transform: scale(1.25);
   transition: 1.0s;
 }
-.card{
-  background-color: #DCD7C9;
-}
+
+
 
 /* Responsive design */
 @media screen and (max-width: 768px) {
@@ -118,10 +136,36 @@ margin-left: 30%;
     max-width: 300px;
   }
 
-  .container.card {
-    width: 100%;
-    margin-bottom: 15px;
+  /* .moveCard {
+  width: 13rem !important;
+  height: 400px !important;
+  
+}
+.movebut{
+  width: 80px !important;
+
+   */
+/* } */
+.moveCard {
+    font-size: 0.85rem;
   }
+
+  .moveCard .btn {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .moveCard .card-title {
+    font-size: 1rem;
+  }
+
+  .moveCard .card-text {
+    font-size: 0.8rem;
+  }
+
+ .prd_image{
+  width: 100px;
+ }
 
   .container.card img {
     width: 100%;

@@ -13,48 +13,57 @@ function Cart() {
   const [modalShow, setModalShow] = useState(false);
   const server_url = "http://localhost:4000";
 
+  console.log("details",cartItems);
+  
+
   useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const userDataString = sessionStorage.getItem("user");
-        if (!userDataString) {
-          toast.error("Please login to view cart");
-          return;
-        }
+  const fetchAll = async () => {
+    try {
+      const userDataString = sessionStorage.getItem("user");
+      if (!userDataString) {
+        toast.error("Please login to view cart");
+        return;
+      }
 
-        const userData = JSON.parse(userDataString);
-        if (!userData._id) {
-          toast.error("Invalid user data");
-          return;
-        }
+      const userData = JSON.parse(userDataString);
+      if (!userData._id) {
+        toast.error("Invalid user data");
+        return;
+      }
 
-        const prodRes = await getProductAPI();
-        const cartRes = await getCartItemsAPI(userData._id);
+      const prodRes = await getProductAPI();
+      const cartRes = await getCartItemsAPI(userData._id);
 
-        if (prodRes?.data && cartRes?.data) {
-          const products = prodRes.data;
-          const userCartItems = cartRes.data;
+      if (prodRes?.data && cartRes?.data) {
+        const products = prodRes.data;
+        const userCartItems = cartRes.data;
 
-          const enrichedCart = userCartItems.map(cartItem => {
-            const prodId = cartItem.productId._id || cartItem.productId;
-            const fullProduct = products.find(p => p._id === prodId);
+        const enrichedCart = userCartItems
+          .filter(cartItem => cartItem.productId) //  skip invalid items
+          .map(cartItem => {
+            const prodId = cartItem.productId;
+            const fullProduct = products.find(
+              p => p._id?.toString() === prodId?.toString()
+            );
+
             return {
               ...cartItem,
-              productData: fullProduct
+              productData: cartItem.productId // still return it if product missing
             };
           });
 
-          setCartItems(enrichedCart);
-        } else {
-          toast.error("Failed to load cart items");
-        }
-      } catch (error) {
-        toast.error("Error loading cart");
+        setCartItems(enrichedCart);
+      } else {
+        toast.error("Failed to load cart items");
       }
-    };
+    } catch (error) {
+      console.log("Error loading cart", error);
+    }
+  };
 
-    fetchAll();
-  }, []);
+  fetchAll();
+}, []);
+
 
   // Delete cart item
   const hancledelete = async (productId) => {
@@ -123,6 +132,7 @@ const isValidPhoneNumber = (phone) => {
   };
 
   const handleAdd = async () => {
+     const userData = JSON.parse(sessionStorage.getItem("user"));
     const { Username, email, phonenumber, address, price, products } = paymentdetails;
 
      // Validation
@@ -140,7 +150,7 @@ const isValidPhoneNumber = (phone) => {
     toast.warning("Please enter a valid 10-digit phone number");
     return;
   }
-
+try{
   // Proceed to create Razorpay order
   const res = await createOrderAPI({ amount: price }); 
   const { id: order_id, amount } = res.data.order;
@@ -157,21 +167,33 @@ const isValidPhoneNumber = (phone) => {
       name: "Auto cam",
       description: "Order Payment",
       order_id,
-      handler: async function (response) {
-        const verifyRes = await verifyPaymentAPI({
-          ...response,
-          Username,
-          phonenumber,
-          address,
-          payment: price,
-          email,
-          products
-        });
+       handler: async function (response) {
+        // ✅ Restore scroll after payment success
+        document.body.style.overflow = "auto";
 
-        if (verifyRes.status === 200) {
-          toast.success("Payment Successful!");
-        } else {
-          toast.error("Payment verification failed");
+        try {
+          const verifyRes = await verifyPaymentAPI({
+            ...response,
+            Username,
+            Userid: userData._id,
+            phonenumber,
+            address,
+            payment: price,
+            email,
+            products
+          });
+
+          if (verifyRes.status === 200) {
+            toast.success("Payment Successful!");
+          setPaymentdetails({
+      Username: "", phonenumber: "", email: "", address: "", price: "", products: []
+    });
+    setModalShow(false);
+          } else {
+            toast.error("Payment verification failed");
+          }
+        } catch (error) {
+          toast.error("Payment verification error");
         }
       },
       prefill: {
@@ -185,12 +207,26 @@ const isValidPhoneNumber = (phone) => {
     };
 
     const razor = new window.Razorpay(options);
-    razor.open();
-    setPaymentdetails({
-      Username: "", phonenumber: "", email: "", address: "", price: "", products: []
+
+    
+    razor.on("payment.failed", function () {
+      document.body.style.overflow = "auto";
     });
-    setModalShow(false);
-  };
+
+    razor.on("external_wallet", function () {
+      document.body.style.overflow = "auto";
+    });
+
+    razor.open();
+
+   
+    setTimeout(() => {
+      document.body.style.overflow = "auto";
+    }, 3000);
+  } catch (error) {
+    toast.error("Order creation failed");
+  }
+};
 
   return (
     <div className='bodis'>

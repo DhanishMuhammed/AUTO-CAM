@@ -66,6 +66,16 @@ const names=sessionStorage.getItem('user')
     }
 
   }
+  const myorder=()=>{
+    const user=sessionStorage.getItem('user')
+
+    if(user){
+      navigate('/myorders')
+    }else{
+      navigate('/login')
+    }
+
+  }
 
 
 
@@ -75,8 +85,8 @@ const names=sessionStorage.getItem('user')
         <Container>
           <img src={logs} width={100} alt="" />
 
-          <Navbar.Toggle aria-controls="responsive-navbar-nav nav-light" />
-          <Navbar.Collapse id="responsive-navbar-nav">
+          <Navbar.Toggle aria-controls="responsive-navbar-nav " className='navbar-toggler ' />
+          <Navbar.Collapse id="responsive-navbar-nav ">
             <Nav className="ms-auto">
               <Link to={'/'} style={{ textDecoration: "none" }} onClick={() => handleLinkClick('/')}>
                 <Nav className={`fw-bolder pe-3 head ${activeLink === '/' ? 'active-link' : ''}`}>Home</Nav>
@@ -111,8 +121,10 @@ const names=sessionStorage.getItem('user')
           <Offcanvas.Title><h1>{username.Username}</h1></Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <h6 onClick={tocart} ><p><i class="fa-solid fa-cart-shopping"></i> Cart</p></h6>
-          <Link to={'/login'} style={{textDecoration:"none"}} ><p><i class="fa-solid fa-circle-user"></i> Login</p></Link>
+          <h6 onClick={tocart} ><p><i className="fa-solid fa-cart-shopping"></i> Cart</p></h6>
+          <h6 onClick={myorder} ><p><i className="fa-solid fa-truck-fast"></i> My Orders</p></h6>
+
+          <Link to={'/login'} style={{textDecoration:"none"}} ><p><i className="fa-solid fa-circle-user"></i> Login</p></Link>
     
           <Button variant="danger" className="w-100 mt-3" onClick={()=>handleLogout () }>Logout</Button>
         </Offcanvas.Body>

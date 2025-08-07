@@ -8,6 +8,9 @@ const productupload=require('../middilwaare/productMiddileware')
 const serviceCrtl=require("../Controller/ServiceController")
 const confromctrl=require("../Controller/conformController")
 const paymentCtrl=require("../Controller/paymentController")
+const instaController=require("../Controller/instaController")
+const Whatsnewcontroller=require("../Controller/WhatsnewController")
+const whatsmiddileware=require("../middilwaare/whatnewMiddileware")
 
 
 // register
@@ -46,6 +49,9 @@ router.get('/products',productctrl.getAllProducts)
 
 router.delete('/products/:id',productctrl.deleteProduct)
 
+// edit product
+router.put("/products/:id", productupload.single("image"), productctrl.EditProducts);
+
 // add service
 router.post('/services',serviceCrtl.createServiceRequest)
 
@@ -74,13 +80,23 @@ router.post('/payments/create', paymentCtrl.createOrder);
 // Verify and save payment after successful transaction
 router.post('/payments/verify', paymentCtrl.verifyPayment);
 
-
 // get all payment
 router.get('/payments',paymentCtrl.getAllPayments)
 
+// instagaram Controller
+router.get('/instagram',instaController.getInstagramFeed)
 
+//upload  whats new banner
 
-// payment veryfy
+router.post('/uploads/whatsnew',whatsmiddileware.single('image'),Whatsnewcontroller.uploadnewbanner)
+
+// get whats new banner
+
+router.get('/whatsnewbanners',Whatsnewcontroller.getNewbanner)
+
+//delete whats new banner
+
+router.delete('/whatsnewbanners/:id',Whatsnewcontroller.deleteNewbanner)
 
 
 

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
+   Userid:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true, 
+  },
   Username: {
     type: String,
     required: true,

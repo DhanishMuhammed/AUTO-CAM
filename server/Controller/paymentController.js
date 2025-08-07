@@ -34,6 +34,7 @@ exports.verifyPayment = async (req, res) => {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
+      Userid,
       Username,
       phonenumber,
       address,
@@ -51,11 +52,15 @@ exports.verifyPayment = async (req, res) => {
     if (expectedSignature === razorpay_signature) {
       const newPayment = new Payment({
         Username: Username,
+        Userid,
         phonenumber,
         address,
         payment,
         email,
-        products
+        products,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
       });
 
       await newPayment.save();

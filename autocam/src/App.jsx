@@ -15,6 +15,8 @@ import Admin from './pages/Admin'
 import Edits from './component/Edits'
 import ServiceBooked from './component/ServiceBooked'
 import Orderpayment from './component/Orderpayment'
+import Payedproducts from './component/Payedproducts'
+import Peoductsection from './component/Peoductsection'
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
       <Route path='/edits' element={<Edits/>}/>
       <Route path='/bookedservice' element={<ServiceBooked/>} />
       <Route path='/orderpage' element={<Orderpayment/>} />
+      <Route path='/myorders' element={<Payedproducts/>} />
+      <Route path='/productsecsion' element={<Peoductsection/>} />
       <Route path='/*' element={'/'}/>
 
 

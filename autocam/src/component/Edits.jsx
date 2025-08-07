@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { uploadBannerAPI, getBannerAPI, deleteBannerAPI, uploadproductAPI, getProductAPI, deleteProductAPI } from '../server/allAPi';
+import { uploadBannerAPI, getBannerAPI, deleteBannerAPI, uploadproductAPI, getProductAPI, deleteProductAPI,UploadwhatsnewAPI, getWhatsnewAPI, deletwhastnewAPI } from '../server/allAPi';
 import { server_url } from '../server/serverUrl';
 import { Card } from 'react-bootstrap';
 
@@ -13,12 +13,13 @@ function Edits() {
   const [homebanner, setHomebanner] = useState({ image: "", preview: "" });
   const [fileStatus, setFileStatus] = useState(false);
   const [banners, setBanners] = useState([]);
+  const [whatsPost,setWhtaspost]=useState({imageUrl:"",priview:""})
+  const [whatsnewData,setWhatsnewData]=useState([])
   const server_url="http://localhost:4000" 
 
-  const [products,setProducts]=useState({
-    prd_image:"",prd_name:"",prd_description:"",prd_price:"",prd_img_priew:""
-  })
+
   const [prd,setprd]=useState([])
+
 
 
 
@@ -30,7 +31,8 @@ function Edits() {
     setActiveModal(null);
     setHomebanner({ image: "", preview: "" });
     setFileStatus(false);
-    setProducts({  prd_image:"",prd_name:"",prd_description:"",prd_price:"",prd_img_priew:""})
+    
+    setWhtaspost({imageUrl:"",priview:""})
   };
 
   useEffect(() => {
@@ -54,7 +56,8 @@ function Edits() {
   // display bannner in modal
   useEffect(() => {
     getAllBanners();
-   getproducts()
+  
+   getwhatsnew();
   }, []);
 
   const getAllBanners = async () => {
@@ -103,260 +106,215 @@ function Edits() {
   // product section
 
 
-// upload products
- const uploadProduct = async (e)=>{
-  e.preventDefault()
-  const {prd_image,prd_name,prd_price,prd_description}= products
 
-  if( !prd_image || !prd_description || !prd_name || !prd_price){
-    toast.error("fill the columns")
-  }else{
-    const uploadData= new FormData()
-    uploadData.append("image",prd_image)
-    uploadData.append("description",prd_description)
-    uploadData.append("price",prd_price)
-    uploadData.append("productname",prd_name)
-    const res= await uploadproductAPI(uploadData)
 
-      if(res.status==200 || res.status==201){
-        toast.success("product uploaded")
-        handleClose()
-        //  setProducts({  prd_image:"",prd_name:"",prd_description:"",prd_price:"",prd_img_priew:""})
-        getproducts()
-      }else{
-        toast.error("uploaded error")
-      }
+  
 
+
+
+
+
+// upload whats new products
+
+const uploadWhatsnew = async () => {
+  if (!whatsPost.imageUrl) {
+    alert("Please select an image.");
+    return;
   }
- }
+
+  const formData = new FormData();
+  formData.append("image", whatsPost.imageUrl);  // This must match multer's `.single('image')`
+ 
+
+  try {
+    const response = await UploadwhatsnewAPI(formData);
+    console.log("Upload success:", response.data);
+    toast.success("Banner uploaded successfully")
+    handleClose()
+    getwhatsnew()
+  } catch (error) {
+    console.error("Upload failed:", error);
+   toast.error("Upload failed. Check console for details")
+  }
+};
 
   useEffect(() => {
-    if (!products.prd_image) return;
+    if (!whatsPost.imageUrl) return;
 
     if (
-      products.prd_image.type === "image/jpg" ||
-      products.prd_image.type === "image/png" ||
-      products.prd_image.type === "image/jpeg"
+      whatsPost.imageUrl.type === "image/jpg" ||
+      whatsPost.imageUrl.type === "image/png" ||
+      whatsPost.imageUrl.type === "image/jpeg"
     ) {
-      const previewUrl = URL.createObjectURL(products.prd_image);
-      setProducts(prev => ({ ...prev, prd_img_priew: previewUrl }));
+      const previewUrl = URL.createObjectURL(whatsPost.imageUrl);
+      setWhtaspost(prev => ({ ...prev, priview: previewUrl }));
       setFileStatus(false);
     } else {
-      setProducts(prev => ({ ...prev, prd_img_priew: "" }));
+      setWhtaspost(prev => ({ ...prev, priview: "" }));
       setFileStatus(true);
     }
-  }, [products.prd_image]);
+  }, [whatsPost.imageUrl]);
 
 
-// get products
 
-const getproducts= async()=>{
-  const res=  await getProductAPI();
-  if (res.status===200){
-    setprd(res.data)
+
+// get whats new 
+
+const getwhatsnew= async()=>{
+  const res= await getWhatsnewAPI()
+  if(res.status==200){
+    setWhatsnewData(res.data)
   }else{
-    toast.error("get products error")
+    toast.warning("fatchin faild")
   }
 }
 
-// delete products
+// delete whats new
 
-const deleteproducts = async(id)=>{
-  const res = await  deleteProductAPI(id)
-  if(res.status===200){
-    toast.success("product deleted")
-    getproducts()
+const deletewhatsnew=async(id)=>{
+  const res= await deletwhastnewAPI(id)
+  if(res.status==200){
+    toast.success("delete success")
+    getwhatsnew()
   }else{
-    toast.error("deleting failed")
+    toast.error("somthing error")
   }
 }
-
-
 
 
 
   return (
-    <div >
-      <div className='container mt-5'>
-        <Link to={'/admin'} style={{ textDecoration: "none" }}>Back to admin</Link>
+    <div>
+  <div className='container mt-5'>
+    <Link to={'/admin'} style={{ textDecoration: "none" }}>Back to admin</Link>
 
-        <div className='mt-5'>
-           <h1 className="text-center">
-                 Manage your webite
-            </h1>
-          <div className='d-flex gap-5 flex-wrap mt-5 justify-content-center'>
-           
+    <div className='mt-5'>
+      <h1 className="text-center">Manage your website</h1>
 
+      <div className='row gap-4 justify-content-center mt-5'>
+        {/* Home Page Banner */}
+        <div className="col-12 col-md-6 col-lg-4 border rounded shadow text-center p-4 ">
+          <i className="fa-solid fa-image fa-2xl"></i>
+          <h5 className='p-4 text-center' onClick={() => handleShow('homeBanner')}>
+            Home Page Banner
+          </h5>
+          <Modal show={activeModal === 'homeBanner'} onHide={handleClose} size="lg" centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Home Page Banner</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className='mb-3'>
+                <input
+                  type="file"
+                  className='form-control'
+                  onChange={e => setHomebanner({ ...homebanner, image: e.target.files[0] })}
+                />
+                {homebanner.preview && (
+                  <img src={homebanner.preview} width={100} className='mt-3' alt="preview" />
+                )}
+                {fileStatus && <p className='text-danger'>Please upload png/jpg/jpeg only</p>}
+              </div>
 
-            {/* Home Page Banner */}
-
-
-            <div className="w-25 border rounded shadow text-center p-4">
-              <i class="fa-solid fa-image fa-2xl"></i>
-              <h5 className='p-4 text-center' onClick={() => handleShow('homeBanner')}>
-                
-                Home Page Banner
-              </h5>
-              <Modal show={activeModal === 'homeBanner'} onHide={handleClose}
-               
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Home Page Banner</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className='mb-3'>
-                    <input
-                      type="file"
-                      className='form-control'
-                      onChange={e => setHomebanner({ ...homebanner, image: e.target.files[0] })}
+              <hr />
+              <h6>Uploaded Banners:</h6>
+              <div className='d-flex gap-3 flex-wrap'>
+                {banners?.map((bannerimage) => (
+                  <div key={bannerimage._id} className='text-center'>
+                    <img
+                      src={`${server_url}/uploads/${bannerimage.imageUrl}`}
+                      width="100"
+                      height={200}
+                      className='border'
+                      alt="Banner"
                     />
-                    {homebanner.preview && (
-                      <img src={homebanner.preview} width={100} className='mt-3' alt="preview" />
-                    )}
-                    {fileStatus && <p className='text-danger'>Please upload png/jpg/jpeg only</p>}
+                    <Button
+                      size='sm'
+                      variant='danger'
+                      className='mt-2 d-block mx-auto'
+                      onClick={() => deleteBanner(bannerimage._id)}
+                    >
+                      Delete
+                    </Button>
                   </div>
+                ))}
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>Close</Button>
+              <Button variant="primary" onClick={savebanner}>Save Changes</Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
 
-                  <hr />
-                  <h6>Uploaded Banners:</h6>
-                 <div className='d-flex gap-3 flex-wrap'>
-  {banners?.map((bannerimage) => (
-    <div key={bannerimage._id} className='text-center'>
-      <img
-        src={`${server_url}/uploads/${bannerimage.imageUrl}`} 
-        width="100"
-        height={200}
-        className='border'
-        alt="Banner"
-      />
-      <Button
-        size='sm'
-        variant='danger'
-        className='mt-2 d-block mx-auto'
-        onClick={() => deleteBanner(bannerimage._id)}
-      >
-        Delete
-      </Button>
-    </div>
-  ))}
-</div>
+        {/* Product Whats New */}
+        <div className="col-12 col-md-6 col-lg-4 border rounded shadow p-4 text-center">
+          <i className="fa-solid fa-truck-fast fa-2xl"></i>
+          <h5 className='mt-4' onClick={() => handleShow('movingProduct')}>
+            Product What's New
+          </h5>
+          <Modal show={activeModal === 'movingProduct'} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>What's New Product</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div>
+                <input
+                  type="file"
+                  className='form-control'
+                  onChange={e => setWhtaspost({ ...whatsPost, imageUrl: e.target.files[0] })}
+                />
+                {whatsPost.priview && (
+                  <img src={whatsPost.priview} width={100} className='mt-3' alt="preview" />
+                )}
+                {fileStatus && <p className='text-danger'>Please upload png/jpg/jpeg only</p>}
+              </div>
 
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>Close</Button>
-                  <Button variant="primary" onClick={savebanner}>Save Changes</Button>
-                </Modal.Footer>
-              </Modal>
-            </div>
-
-            {/* Other sections (optional placeholders) */}
-            <div className="w-25border rounded shadow p-4 text-center">
-              <i class="fa-solid fa-truck-fast fa-2xl"></i>
-              <h5 className='mt-4' onClick={() => handleShow('movingProduct')}>
-                Home Page Moving Product
-              </h5>
-              <Modal show={activeModal === 'movingProduct'} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Moving Product</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Content for Moving Product</Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>Close</Button>
-                  <Button variant="primary" onClick={handleClose}>Save Changes</Button>
-                </Modal.Footer>
-              </Modal>
-            </div>
-
-            {/* products */}
-
-            <div className="w-25 border rounded shadow p-4 text-center">
-              <i class="fa-solid fa-layer-group fa-2xl"></i>
-              <h5 className='mt-4' onClick={() => handleShow('productBanner')}>
-                Products
-              </h5>
-              <Modal show={activeModal === 'productBanner'} onHide={handleClose}   
-              size="lg"
-              aria-labelledby="contained-modal-title-vcenter"
-              centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Product Page Banner</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                <div className="row">
-                   <div className="text-center col-6 ">
-                  <input
-                      type="file"
-                      className='form-control m-2'
-                      onChange={e=>setProducts({prd_image:e.target.files[0]})}
+              <hr />
+              <h6>Uploaded Banners:</h6>
+              <div className='d-flex gap-3 flex-wrap'>
+                {whatsnewData?.map((bannerimage) => (
+                  <div key={bannerimage._id} className='text-center'>
+                    <img
+                      src={`${server_url}/uploads/whatsnew/${bannerimage.imageUrl}`}
+                      width="100"
+                      height={200}
+                      className='border'
+                      alt="Banner"
                     />
-                    <input type="text" className='form-control  m-2' onChange={e => setProducts({ ...products, prd_name: e.target.value })}  placeholder='product name' />
-                    <input type="text" className='form-control  m-2' onChange={e=>setProducts({...products,prd_description:e.target.value})} placeholder='product description' />
-                    <input type="number" className='form-control  m-2' onChange={e=> setProducts({...products,prd_price:e.target.value})}  placeholder='product price' />
-                </div>
-                <div className="col-6">
-                  <Card style={{ width: '17rem', height: '300px' }}>
-          {products.prd_img_priew &&
-           ( <Card.Img height={'200px'} width={100} variant="top" src={products.prd_img_priew} />)}
-          <Card.Body className="d-flex flex-column align-items-center">
-            {products.prd_description&&products.prd_name&&
-            (<Card.Title className='text-center'>{products.prd_name}</Card.Title>)}
-            <Card.Text>
-              {products.prd_description}
-            </Card.Text>
-            <h3 className='fw-bolder text-danger'>{products.prd_price}</h3>
-            {fileStatus && <p className='text-danger'>Please upload png/jpg/jpeg only</p>}
-          
-          </Card.Body>
-        </Card>
-                </div>
-                </div>
-<div className='table-responsive'>
-  <table className="table">
-    <thead>
-      <tr>
-        <th>S.no</th>
-        <th>Product Name</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {prd.map((prd, index) => (
-        <tr key={index}>
-          <td>{index + 1}</td>
-          <td>{prd.productname}</td>
-          <td><img src={`${server_url}/uploads/products/${prd.productImage}`} width={50} height={50} alt="" /></td>
-          <td>
-            <button
-              className='btn btn-danger btn-sm '
-              onClick={() => deleteproducts(prd._id)}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+                    <Button
+                      size='sm'
+                      variant='danger'
+                      className='mt-2 d-block mx-auto'
+                      onClick={() => deletewhatsnew(bannerimage._id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>Close</Button>
+              <Button variant="primary" onClick={uploadWhatsnew}>Save Changes</Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
 
-
-               
-
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>Close</Button>
-                  <Button variant="primary" onClick={uploadProduct}>Save Changes</Button>
-                </Modal.Footer>
-              </Modal>
-            </div>
-          </div>
+        {/* Products */}
+        <div className="col-12 col-md-6 col-lg-4 border rounded shadow p-4 text-center">
+          <i className="fa-solid fa-layer-group fa-2xl"></i>
+          <Link to={'/productsecsion'} style={{textDecoration:"none",color:"black"}}>
+            <h5 className='mt-4'>Products</h5>
+          </Link>
+         
         </div>
       </div>
-
-      <ToastContainer autoClose={3000} />
     </div>
+  </div>
+
+  <ToastContainer autoClose={3000} />
+</div>
+
   );
 }
 

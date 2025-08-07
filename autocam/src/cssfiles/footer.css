@@ -1,0 +1,201 @@
+ 
+        
+
+        .footer {
+            background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
+            padding: 30px 0 0 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+           margin-bottom: -30px;
+           margin-top: 20px;
+        
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+      
+        
+
+        .company-name img {
+    width: 300px;
+    margin-left: -80px;
+    margin-top: -80px;
+}
+
+
+        
+
+        .footer-section h2 {
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 8px;
+            margin-left: -30px;
+        
+        }
+
+        .footer-section a {
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #1e3a8a;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            color: #555;
+            font-size: 14px;
+        }
+
+    
+
+
+        .email-icon img{ 
+            width: 15px;
+        }
+
+        .footer-bottom {
+            background-color: #1e3a8a;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .footer-bottom-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        
+
+        .footer-logo-small img {
+            width: 150px;
+            height: 100px;
+            margin-top: -30px;
+            margin-bottom: -20px;
+            margin-left:-80px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+       
+
+        .social-icon img {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            
+            transition: transform 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-2px);
+        }
+
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .company-name img{
+                margin-left: auto;
+                margin-bottom: -20px;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+            .footer-section{
+                text-align: center;
+            }
+            .contact-item{
+               
+                justify-content: center;
+            }
+
+            .logo-section {
+                justify-content: center;
+            }
+
+            .footer-bottom-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+            .footer-logo-small img {
+                /* margin-top: auto; */
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer {
+                padding: 30px 0 0 0;
+            }
+
+            .footer-content {
+                padding: 0 15px;
+                gap: 25px;
+            }
+
+            .company-name {
+                font-size: 24px;
+            }
+
+            .social-links {
+                gap: 10px;
+            }
+
+            .social-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+        }

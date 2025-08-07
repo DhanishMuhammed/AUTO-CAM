@@ -17,6 +17,10 @@ const productSchema=mongoose.Schema({
     price:{
         type:Number,
         required:true
+    },
+    productType:{
+        type:String,
+        required:true
     }
 });
 

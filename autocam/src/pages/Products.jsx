@@ -4,7 +4,7 @@ import {  useNavigate } from 'react-router-dom'
 import Footer from '../component/Footer'
 import Header from '../component/Header'
 import '../cssfiles/product.css'
-import { getProductAPI,addtocartAPI, createOrderAPI,verifyPaymentAPI } from '../server/allAPi'
+import { getProductAPI,addtocartAPI, createOrderAPI,verifyPaymentAPI, getWhatsnewAPI } from '../server/allAPi'
 import{ ToastContainer, toast } from 'react-toastify'
 
 function Products() {
@@ -14,6 +14,9 @@ const [searchitem,setSearchitems]=useState('')
 const [paymentdetails,setPaymentdetails]=useState({
   Username:"",phonenumber:"",email:"",address:"",price:"",productName:""
 })
+const [options,setOptions]=useState('')
+const [activefilter,SetActivefilter]=useState('All')
+const [WhatsNewAdd,setWhatsNewAdd]=useState([])
 const server_url="http://localhost:4000" 
   const navigate = useNavigate()
 
@@ -69,11 +72,8 @@ const isValidPhoneNumber = (phone) => {
 
 
 const handleAdd = async () => {
-  // const userData = JSON.parse(sessionStorage.getItem("user"));
-  // if (!userData) {
-  //   navigate('/login');
-  //   return;
-  // }
+  const userData = JSON.parse(sessionStorage.getItem("user"));
+ 
 
   const { Username, email, phonenumber,address,price,productName } = paymentdetails;
 
@@ -101,7 +101,7 @@ const handleAdd = async () => {
      toast.error("Failed to load Razorpay. Please try again later.");
      return;
    }
-
+try{
   const options = {
     key: "rzp_test_hKZPC8dz3sXXUm", // Replace with actual key
     amount: amount.toString(),
@@ -110,10 +110,14 @@ const handleAdd = async () => {
     description: productName,
     order_id,
     handler: async function (response) {
+      document.body.style.overflow = "auto";
       console.log("Razorpay response:", response);  // add this
+
+      
       const verifyRes = await verifyPaymentAPI({
         ...response,
         Username,
+        Userid:userData._id,
         phonenumber,
         address: address,
         payment: price,
@@ -143,11 +147,28 @@ const handleAdd = async () => {
   };
 
   const razor = new window.Razorpay(options);
-  razor.open();
-  setPaymentdetails({
-    Username:"",phonenumber:"",email:"",address:"",price:"",productName:""
-  })
-  setModalShow(false)
+   // ✅ Optional: restore scroll if payment fails or is closed
+    razor.on("payment.failed", function () {
+      document.body.style.overflow = "auto";
+    });
+
+    razor.on("external_wallet", function () {
+      document.body.style.overflow = "auto";
+    });
+
+    razor.open();
+
+    // ✅ Fallback timeout in case modal closes without events
+    setTimeout(() => {
+      document.body.style.overflow = "auto";
+    }, 3000);
+    setModalShow(false)
+    setPaymentdetails({
+       Username:"",phonenumber:"",email:"",address:"",price:"",productName:""
+    })
+  } catch (error) {
+    toast.error("Order creation failed");
+  }
 };
 
  
@@ -160,7 +181,8 @@ const handleAdd = async () => {
   // getting products
 
   useEffect(()=>{
-    getproducts()
+    getproducts();
+    getwhatsNew()
   },[])
 
   const getproducts=async()=>{
@@ -197,9 +219,48 @@ const handleAdd = async () => {
 };
 
 // search products
-const filteredProducts = products.filter((prd) =>
-  prd.productname.toLowerCase().includes(searchitem.toLowerCase())
+const filteredProducts = products.filter(
+  (prd) =>
+    (options === "" || prd.productType === options) &&
+    prd.productname.toLowerCase().includes(searchitem.toLowerCase())
 );
+
+
+
+// get what neww banners
+
+const getwhatsNew=async()=>{
+  const res= await getWhatsnewAPI()
+  if(res.status==200){
+    setWhatsNewAdd(res.data)
+
+  }else{
+    toast.error("fetching faild")
+  }
+}
+
+// filterring products
+
+const camreclick= ()=>{
+  setOptions('cctv')
+  SetActivefilter('cctv')
+}
+
+const autoclick=()=>{
+  setOptions('automate')
+  SetActivefilter('automate')
+} 
+
+const ipclick=()=>{
+  setOptions('ipcam')
+  SetActivefilter('ipcam')
+}
+const Allclick=()=>{
+  setOptions('')
+  SetActivefilter('All')
+}
+
+const filterprd=products.filter(items=>items.productType === options)
 
   return (
     <div className='bod'>
@@ -208,7 +269,7 @@ const filteredProducts = products.filter((prd) =>
         <Carousel  data-bs-theme="light">
         <Carousel.Item className='rounded-pill'>
           <img
-            className="d-block w-100" height={'440px'}
+            className="d-block w-100 rounded-4" height={'440px'}
             src="https://www.cpplusworld.com/prodassets/banners/f50a4500-cd98-467c-8786-5051c11753c0.jpg"
           />
           <Carousel.Caption>
@@ -217,7 +278,7 @@ const filteredProducts = products.filter((prd) =>
         </Carousel.Item>
         <Carousel.Item>
           <img
-            className="d-block w-100" height={'440px'}
+            className="d-block w-100 rounded-4" height={'440px'}
             src="https://www.hikvision.com/content/dam/hikvision/en/marketing/image/home/TOP-5-trends-for-the-AIoT-industry-in-2025-banner-updated.jpg?f=webp"
 
           />
@@ -227,7 +288,7 @@ const filteredProducts = products.filter((prd) =>
         </Carousel.Item>
         <Carousel.Item>
           <img
-            className="d-block w-100" height={'440px'}
+            className="d-block w-100 rounded-4" height={'440px'}
             src="https://www.hikvision.com/content/dam/hikvision/en/support/how-to/password-reset/password-reset-PC-banner.jpg?f=webp"
           />
           <Carousel.Caption>
@@ -240,15 +301,15 @@ const filteredProducts = products.filter((prd) =>
 
       {/* premium cards section */}
 
-      <div className="premium  mt-5 mb-5">
+      <div className=" mt-5 mb-5">
         <h1 className='text-center montserrat mt-3'> Products Spotlight</h1>
       </div>
 
-      <div className="container    d-flex justify-content-between align-items-center mt-4 mb-5 ">
+      <div className="container d-flex justify-content-between align-items-center mt-4 mb-5 premium  ">
 
        {
        products.slice(0,4).map((prd)=>(
-        <Card className='prd-1' style={{ width: '17rem', height: '450px' }}>
+        <Card className='prd-1' key={prd._id} style={{ width: '17rem', height: '450px' }}>
           <Card.Img height={'250px'} variant="top"  src={`${server_url}/uploads/products/${prd.productImage}`} />
           <Card.Body className="d-flex flex-column align-items-center">
             <Card.Title className='text-center'>{prd.productname}</Card.Title>
@@ -272,51 +333,42 @@ const filteredProducts = products.filter((prd) =>
   <h2 className="text-center montserrat mb-4">What's New?</h2>
 
   <Row className="gx-3 gy-3">
-    <Col xs={12} lg={8}>
-      <img
-        className="rounded shadow img-fluid w-100"
-        style={{ maxHeight: "320px", objectFit: "cover" }}
-        src="https://www.robustel.com/wp-content/uploads/2018/12/shutterstock_366966188.jpg"
-        alt=""
-      />
-    </Col>
-    <Col xs={12} lg={4}>
-      <img
-        className="rounded shadow img-fluid w-100"
-        style={{ maxHeight: "320px", objectFit: "cover" }}
-        src="https://www.shutterstock.com/image-photo/man-looking-home-security-cameras-600nw-586486958.jpg"
-        alt=""
-      />
-    </Col>
+    {WhatsNewAdd[0] && (
+      <Col xs={12} lg={8}>
+        <img
+          className="rounded shadow img-fluid w-100"
+          style={{ maxHeight: "320px", objectFit: "cover" }}
+          src={`${server_url}/uploads/whatsnew/${WhatsNewAdd[0].imageUrl}`}
+          alt=""
+        />
+      </Col>
+    )}
+    {WhatsNewAdd[1] && (
+      <Col xs={12} lg={4}>
+        <img
+          className="rounded shadow img-fluid w-100"
+          style={{ maxHeight: "320px", objectFit: "cover" }}
+          src={`${server_url}/uploads/whatsnew/${WhatsNewAdd[1].imageUrl}`}
+          alt=""
+        />
+      </Col>
+    )}
   </Row>
 
   <Row className="mt-3 gx-3 gy-3">
-    <Col xs={12} md={6} lg={4}>
-      <img
-        className="rounded shadow img-fluid w-100"
-        style={{ height: "320px", objectFit: "cover" }}
-        src="https://igzy.com/wp-content/uploads/2021/09/Wi-Fi-CCTV-Camera-Reshaping-the-Camera-Market-15-09-21.png"
-        alt=""
-      />
-    </Col>
-    <Col xs={12} md={6} lg={4}>
-      <img
-        className="rounded shadow img-fluid w-100"
-        style={{ height: "320px", objectFit: "cover" }}
-        src="https://cctvinstallationinlondon.weebly.com/uploads/1/4/4/7/144771134/cctv-installation-in-london_orig.jpeg"
-        alt=""
-      />
-    </Col>
-    <Col xs={12} md={12} lg={4}>
-      <img
-        className="rounded shadow img-fluid w-100"
-        style={{ height: "320px", objectFit: "cover" }}
-        src="https://media.istockphoto.com/id/1330512185/photo/technician-installing-cctv-camera-for-security.jpg?s=612x612&w=0&k=20&c=uS2-J8l8VLyCKS01FU89Oy4XbezUhyOU4jWwtHMOfpk="
-        alt=""
-      />
-    </Col>
+    {WhatsNewAdd.slice(2, 5).map((item, idx) => (
+      <Col key={item._id || idx} xs={12} md={6} lg={4}>
+        <img
+          className="rounded shadow img-fluid w-100"
+          style={{ height: "320px", objectFit: "cover" }}
+          src={`${server_url}/uploads/whatsnew/${item.imageUrl}`}
+          alt=""
+        />
+      </Col>
+    ))}
   </Row>
 </div>
+
 
 
 
@@ -338,37 +390,52 @@ const filteredProducts = products.filter((prd) =>
     />
   </div>
 
+  {/* prodect navbar */}
+
+    <div className="container d-flex text-white justify-content-evenly mt-5 prdnav">
+      <h4 onClick={Allclick}  className={activefilter === "All" ? "active-filter" : ""}>All</h4>
+      <h4 onClick={camreclick} className={activefilter === "cctv" ? "active-filter" : ""}>cameras</h4> 
+      <h4 onClick={autoclick} className={activefilter === "automate" ? "active-filter" : ""}>Automation</h4>
+      <h4 onClick={ipclick} className={activefilter === "ipcam" ? "active-filter" : ""}>IP cameras</h4>
+    </div>
+
   {/* Product Card Rows */}
-  <div className="row gy-4 justify-content-center">
-    {filteredProducts.map((items, i) => (
-      <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center" key={i}>
-        <Card className='prd-1' style={{ width: '16rem' }}>
-          <Card.Img
-            variant="top"
-            src={`${server_url}/uploads/products/${items.productImage}`} 
-            width={10}
-          />
-          <Card.Body>
-            <div className="d-flex justify-content-between mt-2">
-              <Card.Title>{items.productname}</Card.Title>
-              <Button
-                onClick={()=>handlecartitems(items._id)}
-                variant="danger"
-                style={{
-                  backgroundColor: 'white',
-                  color: 'red',
-                  width: '50px',
-                  textDecoration: 'none',
-                }}
-              >
-                <i className="fa-solid fs-5 fa-cart-shopping"></i>
-              </Button>
+<div className="container-fluid px-2 mt-5">
+  <div className="row gx-2 gy-3 justify-content-center productss ">
+    {filteredProducts.map((item) => (
+      <div className="col-6 col-sm-6 col-md-4 col-lg-2" key={item._id}>
+        <div className="custom-card">
+          <div className="image-box">
+            <img
+              src={`${server_url}/uploads/products/${item.productImage}`}
+              alt={item.productname}
+              className="w-100"
+            />
+          </div>
+          <div className="card-body-custom">
+            <div className="d-flex flex-column">
+              <h6 className="title">{item.productname}</h6>
+              <h6>₹ {item.price}</h6>
             </div>
-          </Card.Body>
-        </Card>
+            <button
+              className="cart-button"
+              onClick={() => handlecartitems(item._id)}
+            >
+              <i className="fa-solid fa-cart-shopping"></i>
+            </button>
+          </div>
+        </div>
       </div>
     ))}
   </div>
+</div>
+
+
+
+</div>
+<div>
+  
+
 </div>
 
 {/* payment modal */}

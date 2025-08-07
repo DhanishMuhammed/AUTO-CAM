@@ -63,6 +63,14 @@ export const deleteProductAPI =async (productId)=>{
     return await commonAPI("DELETE",`${server_url}/products/${productId}`,"","")
 }
 
+// edit products
+
+export const editeProductAPI= async (id,data)=>{
+    return await commonAPI("PUT",`${server_url}/products/${id}`,data,{
+        "Content-Type": "multipart/form-data"
+    })
+}
+
 //upload sarvices
 
 export const addServiceAPI = async (data) => {
@@ -115,4 +123,30 @@ export const verifyPaymentAPI = async(data)=>{
 
 export const getpaymentsAPI =async()=>{
     return await commonAPI("GET",`${server_url}/payments`,"","")
+}
+
+// get instagram
+
+export const getInstafeedAPI= async()=>{
+    return await commonAPI("GET",`${server_url}/instagram`,"","")
+}
+
+// post whats new image
+
+export const UploadwhatsnewAPI= async(data)=>{
+    return await commonAPI("POST",`${server_url}/uploads/whatsnew`,data,{
+        "Content-Type": "multipart/form-data"
+    });
+}
+
+//get whats new image
+
+export const getWhatsnewAPI= async()=>{
+    return await commonAPI("GET",`${server_url}/whatsnewbanners`,"","")
+}
+
+//delete whats new banners
+
+export const deletwhastnewAPI=  async(id)=>{
+    return await commonAPI("DELETE",`${server_url}/whatsnewbanners/${id}`,"","")
 }

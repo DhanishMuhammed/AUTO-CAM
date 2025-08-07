@@ -6,7 +6,7 @@ const path = require('path');
 // POST /products — Add New Product
 exports.addProduct = async (req, res) => {
   try {
-    const { productname, description, price } = req.body;
+    const { productname, description, price,productType } = req.body;
 
     // Ensure image is uploaded
     if (!req.file) {
@@ -19,7 +19,8 @@ exports.addProduct = async (req, res) => {
       productname,
       description,
       price,
-      productImage
+      productImage,
+      productType
     });
 
     await newProduct.save();
@@ -53,7 +54,7 @@ exports.deleteProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    // ✅ Delete the uploaded image file from server
+    // 
     const imagePath = path.join(__dirname, '../uploads/products', deleted.productImage);
     fs.unlink(imagePath, (err) => {
       if (err) {
@@ -66,5 +67,40 @@ exports.deleteProduct = async (req, res) => {
   } catch (error) {
     console.error("Delete product error:", error);
     res.status(500).json({ error: 'Failed to delete product' });
+  }
+};
+
+// edit products
+
+exports.EditProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { productname, description, price, productType } = req.body;
+    let updatedData = { productname, description, price, productType };
+
+    if (req.file) {
+      // If a new image is uploaded, delete the old image file
+      const oldProduct = await products.findById(id);
+      if (oldProduct && oldProduct.productImage) {
+        const oldImagePath = path.join(__dirname, "../uploads/products", oldProduct.productImage);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+
+      // Add new image filename to updated data
+      updatedData.productImage = req.file.filename;
+    }
+
+    const updatedProduct = await products.findByIdAndUpdate(id, updatedData, { new: true });
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product updated", product: updatedProduct });
+  } catch (err) {
+    console.error("Error editing product:", err);
+    res.status(500).json({ error: "Server error while updating product" });
   }
 };

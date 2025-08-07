@@ -106,7 +106,7 @@ console.log(saveservce);
                     name: "Home Automation"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "homeautomatino"}
@@ -280,7 +280,7 @@ console.log(saveservce);
                 }));
               }
 
-              }><i class="fas fa-arrow-right"></i></button>
+              }><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "CCTV"}
@@ -447,7 +447,7 @@ console.log(saveservce);
                     name: "networking"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "networking"}
@@ -613,7 +613,7 @@ console.log(saveservce);
                     name: "smartclass"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "smartclass"}
@@ -780,7 +780,7 @@ console.log(saveservce);
                     name: "Accesscontrol"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "Accesscontrol"}
@@ -945,7 +945,7 @@ console.log(saveservce);
                     name: "securitysystem"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "securitysystem"}
@@ -1109,7 +1109,7 @@ console.log(saveservce);
                     name: "intercom"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "intercom"}
@@ -1273,7 +1273,7 @@ console.log(saveservce);
                     name: "videodoor"
                   }
                 }));
-              }}><i class="fas fa-arrow-right"></i></button>
+              }}><i className="fas fa-arrow-right"></i></button>
             </div>
             <Modal
               show={modalShow === "videodoor"}

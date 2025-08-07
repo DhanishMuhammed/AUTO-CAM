@@ -24,12 +24,12 @@ function Orderpayment() {
 
 
   return (
-    <>
+    <div className='p-4 ' style={{backgroundColor:"#DCD7C9",}}>
       <Link to={'/admin'} className="text-decoration-none mb-3 d-block">
           <h5><i className="fa-solid fa-arrow-left"></i> Back</h5>
         </Link>
 
-         <div className='bg-white rounded shadow p-3'>
+         <div className='bg-white rounded shadow shadow-5 p-3'>
                   <div className="table-responsive">
                     <table className="table table-bordered align-middle">
                       <thead className="table-dark">
@@ -90,7 +90,7 @@ function Orderpayment() {
 
 
 <ToastContainer autoClose={2000} />
-    </>
+    </div>
   )
 }
 
