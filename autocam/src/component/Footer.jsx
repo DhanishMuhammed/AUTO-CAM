@@ -11,16 +11,16 @@ import insta from "../assets/images/instagram.png"
 import newlogo from "../assets/images/newlogo.png"
 function Footer() {
   return (
-   <footer class="footer">
-        <div class="footer-content">
+   <footer className="footer">
+        <div className="footer-content">
 
 
             
             {/* <!-- Logo Section --> */}
-            <div class="logo-section">
+            <div className="logo-section">
                 
                 <div>
-                    <div class="company-name">
+                    <div className="company-name">
                       <img src={auto} alt="" />
                     </div>
                     
@@ -28,7 +28,7 @@ function Footer() {
             </div>
 
             {/* <!-- Resources Section --> */}
-            <div class="footer-section">
+            <div className="footer-section">
                 <h2>Resources</h2>
                 <ul>
                     <li><a href="#">Products</a></li>
@@ -41,7 +41,7 @@ function Footer() {
             </div>
 
             {/* <!-- Useful Links Section --> */}
-            <div class="footer-section">
+            <div className="footer-section">
                 <h2>Useful Links</h2>
                 <ul>
                     <li><a href="#">Purchase</a></li>
@@ -51,38 +51,38 @@ function Footer() {
             </div>
 
             {/* <!-- Contact Section --> */}
-            <div class="footer-section">
+            <div className="footer-section">
                 <h2>Contact Us</h2>
-                <div class="contact-item">
-                    <div class="contact-icon phone-icon"><i class="fa-solid fa-phone"></i></div>
+                <div className="contact-item">
+                    <div className="contact-icon phone-icon"><i className="fa-solid fa-phone"></i></div>
                     <span>+91 9846732363</span>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-icon "><i class="fa-brands fa-whatsapp fa-xl" style={{color:"#25D366"}}></i></div>
+                <div className="contact-item">
+                    <div className="contact-icon "><i className="fa-brands fa-whatsapp fa-xl" style={{color:"#25D366"}}></i></div>
                     <span>+91 9226300600</span>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-icon email-icon"><img src={email} alt="" /></div>
+                <div className="contact-item">
+                    <div className="contact-icon email-icon"><img src={email} alt="" /></div>
                     <span>autocam@gmail.com</span>
                 </div>
             </div>
         </div>
 
         {/* <!-- Bottom Section --> */}
-        <div class="footer-bottom">
-            <div class="footer-bottom-content">
-                <div class="footer-logo-small">
+        <div className="footer-bottom">
+            <div className="footer-bottom-content">
+                <div className="footer-logo-small">
                     <img src={newlogo} alt="" />
                 </div>
 
-                <div class="social-links">
-                    <a href="#" class="social-icon "><img src={x} alt="" /></a>
-                    <a href="https://www.facebook.com/share/19kzjpF17j/?mibextid=wwXIfr" class="social-icon"><img src={facebook} alt="" /></a>
-                    <a href="https://wa.me/919226300600" class="social-icon "><img src={whatsapp} alt="" /></a>
-                    <a href="https://www.instagram.com/autocam._?igsh=Mnc3Z3Zra3k3enVs" class="social-icon "><img src={insta} alt="" /></a>
+                <div className="social-links">
+                    <a href="#" className="social-icon "><img src={x} alt="" /></a>
+                    <a href="https://www.facebook.com/share/19kzjpF17j/?mibextid=wwXIfr" className="social-icon"><img src={facebook} alt="" /></a>
+                    <a href="https://wa.me/919226300600" className="social-icon "><img src={whatsapp} alt="" /></a>
+                    <a href="https://www.instagram.com/autocam._?igsh=Mnc3Z3Zra3k3enVs" className="social-icon "><img src={insta} alt="" /></a>
                 </div>
 
-                <div class="copyright">
+                <div className="copyright">
                     <span>©</span>
                     <span>Copyright autocam.com</span>
                 </div>
