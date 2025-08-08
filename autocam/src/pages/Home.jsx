@@ -19,7 +19,7 @@ function Home() {
   const [homeproduct,sethomeproduct]=useState([])
   const [posts, setPosts] = useState([]);
 
-   const server_url="http://localhost:4000" 
+   const server_url="https://auto-cam-backend.onrender.com" 
 useEffect(() => {
     getBanner();
     getproducts();

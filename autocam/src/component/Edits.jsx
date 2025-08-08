@@ -15,7 +15,7 @@ function Edits() {
   const [banners, setBanners] = useState([]);
   const [whatsPost,setWhtaspost]=useState({imageUrl:"",priview:""})
   const [whatsnewData,setWhatsnewData]=useState([])
-  const server_url="http://localhost:4000" 
+  const server_url="https://auto-cam-backend.onrender.com" 
 
 
   const [prd,setprd]=useState([])
