@@ -90,7 +90,7 @@ const handlecartitems = async (productId) => {
     const userId = userData._id;
 
     const res = await addtocartAPI(userId, productId, 1);
-    toast.success('Check console for response details');
+    toast.success('Added to Cart');
     
   } catch (error) {
     toast.error('add to cart error ');
