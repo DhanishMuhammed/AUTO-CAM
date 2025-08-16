@@ -17,7 +17,7 @@ const [paymentdetails,setPaymentdetails]=useState({
 const [options,setOptions]=useState('')
 const [activefilter,SetActivefilter]=useState('All')
 const [WhatsNewAdd,setWhatsNewAdd]=useState([])
-const server_url="https://auto-cam-backend.onrender.com" 
+const server_url="http://localhost:4000" 
   const navigate = useNavigate()
 
 

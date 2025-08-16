@@ -19,7 +19,7 @@ function Home() {
   const [homeproduct,sethomeproduct]=useState([])
   const [posts, setPosts] = useState([]);
 
-   const server_url="https://auto-cam-backend.onrender.com" 
+   const server_url="http://localhost:4000" 
 useEffect(() => {
     getBanner();
     getproducts();
@@ -90,7 +90,7 @@ const handlecartitems = async (productId) => {
     const userId = userData._id;
 
     const res = await addtocartAPI(userId, productId, 1);
-    toast.success('Check console for response details');
+    toast.success('Added to Cart');
     
   } catch (error) {
     toast.error('add to cart error ');
@@ -161,7 +161,7 @@ const  instafeed=async()=>{
 
     {/* products */}
 
-    <h1 className='text-center text-black fw-bolder mt-5' style={{textDecoration:"underline",fontFamily:"researcher"}}>Our Moving Produts</h1>
+    <h1 className='text-center text-white fw-bolder mt-5' style={{fontFamily:"researcher"}}>Our Moving Produts</h1>
 
     {/* card */}
 <div className="mt-5 d-flex justify-content-center container">
@@ -221,7 +221,7 @@ const  instafeed=async()=>{
 
     {/* CEO */}
     <div>
-    <h1 className='fw-bolder mt-5 text-center text-black'>Our CEO</h1>
+    <h1 className='fw-bolder mt-5 text-center text-white'>Our CEO</h1>
       <div className="container row">
       
       <div className="col-6">

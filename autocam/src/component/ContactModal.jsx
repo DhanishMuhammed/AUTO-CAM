@@ -67,7 +67,7 @@ const ContactModal = ({ show, handleClose }) => {
                 </div>
 
                 {/* Submit Button */}
-                <button type="submit" className="btn btn-primary d-block w-100">
+                <button  className="btn btn-primary d-block w-100">
                   Submit
                 </button>
               </form>

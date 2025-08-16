@@ -11,7 +11,7 @@ function Cart() {
     Username: "", phonenumber: "", email: "", address: "", price: "", products: []
   });
   const [modalShow, setModalShow] = useState(false);
-  const server_url = "https://auto-cam-backend.onrender.com";
+  const server_url = "http://localhost:4000";
 
   console.log("details",cartItems);
   
