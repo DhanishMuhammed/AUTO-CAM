@@ -130,7 +130,7 @@ function Peoductsection() {
       prd_name: selectedItem.productname  || '',
       discription: selectedItem.description  || '',
       price: selectedItem.price || '',
-      prd_img_priew: `http://localhost:4000/uploads/products/${selectedItem.productImage}`,
+      prd_img_priew: `https://auto-cam-backend.onrender.com/uploads/products/${selectedItem.productImage}`,
       prdid:selectedItem._id
      
     });
