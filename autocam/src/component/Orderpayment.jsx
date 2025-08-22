@@ -1,10 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { getpaymentsAPI } from '../server/allAPi'
 import { ToastContainer, toast } from 'react-toastify';
 
 function Orderpayment() {
     const [paymentdetails,setPaymentdetails]=useState([])
+    const navigate = useNavigate()
+
+    useEffect(()=>{
+        getpayments()
+    },[])
+      useEffect(() => {
+        const token = sessionStorage.getItem('token')
+        const userData = sessionStorage.getItem('user')
+        const userRole = sessionStorage.getItem('userRole')
+    
+        if (!token) {
+          toast.error('Please login to access admin panel')
+          navigate('/login')
+          return
+        }
+    
+        if (userRole !== 'admin') {
+          toast.error('Access denied. Admin privileges required.')
+          navigate('/')
+          return
+        }
+      }, [navigate])
 
 
     useEffect(()=>{
