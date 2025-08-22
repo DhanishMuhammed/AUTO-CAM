@@ -17,7 +17,7 @@ function Edits() {
 const navigate = useNavigate()
 
   const [prd,setprd]=useState([])
-  const navigate = useNavigate()
+  
 
   
 
