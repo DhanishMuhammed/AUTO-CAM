@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { getpaymentsAPI } from '../server/allAPi'
 import { ToastContainer, toast } from 'react-toastify';
 
 function Orderpayment() {
     const [paymentdetails,setPaymentdetails]=useState([])
-
+    const navigate = useNavigate()
 
     useEffect(()=>{
         getpayments()

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import '../cssfiles/booked.css';
 import { deleteconfrimedorderAPI, deleteseviceAPI, getserviceOrderAPI, getServicesAPI, uploadconfrimOrderAPI } from '../server/allAPi';
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,7 +10,7 @@ function ServiceBooked() {
   const [selectedType, setSelectedType] = useState(null);
   const [confrimedID, setconfrimedID] = useState([]);
   const [showConfirmedDelete, setShowConfirmedDelete] = useState(false);
-
+const navigate = useNavigate()
   useEffect(() => {
     getservicebooked();
     getConfrimedorder();
