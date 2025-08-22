@@ -14,7 +14,7 @@ function Edits() {
   const [whatsPost,setWhtaspost]=useState({imageUrl:"",priview:""})
   const [whatsnewData,setWhatsnewData]=useState([])
   const server_url="http://localhost:4000" 
-  const navigate = useNavigate()
+const navigate = useNavigate()
 
   const [prd,setprd]=useState([])
 
