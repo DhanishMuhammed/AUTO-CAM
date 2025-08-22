@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,6 +17,27 @@ function Edits() {
 const navigate = useNavigate()
 
   const [prd,setprd]=useState([])
+  const navigate = useNavigate()
+
+  
+
+  useEffect(() => {
+        const token = sessionStorage.getItem('token')
+        const userData = sessionStorage.getItem('user')
+        const userRole = sessionStorage.getItem('userRole')
+    
+        if (!token) {
+          toast.error('Please login to access admin panel')
+          navigate('/login')
+          return
+        }
+    
+        if (userRole !== 'admin') {
+          toast.error('Access denied. Admin privileges required.')
+          navigate('/')
+          return
+        }
+      }, [navigate])
 
   useEffect(() => {
         const token = sessionStorage.getItem('token')
