@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { deleteProductAPI, editeProductAPI, getProductAPI, uploadproductAPI } from '../server/allAPi'
 import { useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify';
@@ -11,6 +11,27 @@ function Peoductsection() {
   const [prd_data, setprd_data] = useState([])
   const [filterddata, setFilterddata] = useState([])
   const fileInputRef = useRef(null);
+  const navigate = useNavigate()
+
+  
+
+  useEffect(() => {
+        const token = sessionStorage.getItem('token')
+        const userData = sessionStorage.getItem('user')
+        const userRole = sessionStorage.getItem('userRole')
+    
+        if (!token) {
+          toast.error('Please login to access admin panel')
+          navigate('/login')
+          return
+        }
+    
+        if (userRole !== 'admin') {
+          toast.error('Access denied. Admin privileges required.')
+          navigate('/')
+          return
+        }
+      }, [navigate])
 
 
   useEffect(() => {
